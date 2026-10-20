@@ -31,7 +31,7 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       cursor: pointer; transition: all 0.2s; color: #fff; font-weight: bold;
     }
-    .circle-btn span { font-size: 12px; color: #8b949e; margin-top: 4px; font-weight: normal; }
+    .circle-btn span { font-size: 11px; color: #8b949e; margin-top: 4px; font-weight: normal; }
 
     /* Подсветка активных кругов */
     .circle-joy { border-color: rgba(242, 201, 76, 0.4); }
@@ -57,7 +57,7 @@
     textarea { width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; outline: none; text-align: center; }
     textarea::placeholder { color: #484f58; }
 
-    /* Панель Joy: доходы слева, расходы справа в одну строку */
+    /* Панель Joy */
     #joySummaryPanel { display: none; padding: 5px 0 15px 0; }
     .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; padding: 0 10px; }
     .val-income { color: #238636; }
@@ -94,17 +94,17 @@
 
     #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #21262d; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; border: 1px solid #30363d; z-index: 1000; }
 
-    /* --- СТИЛИ ДЛЯ ВСПЛЫВАЮЩЕГО ОКНА (МОДАЛКИ) --- */
+    /* Модальное окно */
     #modalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
     .modal-content { background: #161b22; padding: 25px; border-radius: 20px; width: 90%; max-width: 340px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.7); text-align: center; }
-    .modal-content h3 { margin-top: 0; color: #8c9bae; margin-bottom: 20px; }
-    #modalTypeBtn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 15px; cursor: pointer; transition: 0.2s; }
-    .modal-field { margin-bottom: 15px; text-align: left; }
-    .modal-field label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 5px; padding-left: 5px; }
-    .modal-field input, .modal-field select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 18px; box-sizing: border-box; outline: none; appearance: none; -webkit-appearance: none; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .modal-btn-cancel { flex: 1; background: #30363d; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-    .modal-btn-confirm { flex: 2; background: #238636; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+    .modal-content h3 { margin-top: 0; color: #8c9bae; margin-bottom: 15px; }
+    #modalTypeBtn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 16px; font-weight: bold; color: #fff; margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+    .modal-field { margin-bottom: 12px; text-align: left; }
+    .modal-field label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 4px; padding-left: 5px; }
+    .modal-field input, .modal-field select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; appearance: none; -webkit-appearance: none; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 15px; }
+    .modal-btn-cancel { flex: 1; background: #30363d; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+    .modal-btn-confirm { flex: 2; background: #238636; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -146,14 +146,13 @@
     </div>
   </div>
 
-  <!-- Зона ввода -->
+  <!-- Карточка ввода -->
   <div class="input-card">
-    
     <div id="standardInput">
       <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
     </div>
 
-    <!-- Блок транзита: кружки ИЗ и В без лишнего текста -->
+    <!-- Блок транзита -->
     <div id="transitPanel">
       <div class="transit-circles-row">
         <div class="transit-circle circle-from-box">
@@ -179,7 +178,7 @@
       <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
     </div>
 
-    <!-- Панель Joy: доходы слева, расходы справа в одну строку -->
+    <!-- Панель Joy -->
     <div id="joySummaryPanel">
       <div class="summary-inline">
         <span class="val-income" id="monthlyIncome">0.00 €</span>
@@ -196,7 +195,7 @@
   </div>
 </div>
 
-<!-- ================= ВСПЛЫВАЮЩЕЕ ОКНО (МОДАЛКА) ================= -->
+<!-- ================= МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ================= -->
 <div id="modalOverlay">
   <div class="modal-content">
     <h3>Проверка данных</h3>
@@ -214,7 +213,12 @@
     </div>
 
     <div class="modal-field">
-      <label>Описание (или Фирма):</label>
+      <label>Кто / Кому:</label>
+      <select id="modalWho"></select>
+    </div>
+
+    <div class="modal-field">
+      <label>Описание:</label>
       <input type="text" id="modalDescription">
     </div>
 
@@ -228,15 +232,14 @@
 <div id="toast">Сохранение...</div>
 
 <script>
-  // === ВАЖНО: ВСТАВЬТЕ СЮДА ВАШ АКТУАЛЬНЫЙ URL ВЕБ-ПРИЛОЖЕНИЯ ===
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyouTYwZVPHbgb1jF7JoRmTIqW7novwK4hcwWCqlKDBq-4ExUp4gqx5deF5V0IiPJc7Dg/exec";
   
   let activeCategory = "Руки"; 
   let isSubmitting = false;
   let cachedBalances = {};
   
-  // Глобальные переменные для модалки
   let globalCategories = [];
+  let globalWhos = [];
   let pendingTxData = {};
   let currentModalType = "expense";
 
@@ -250,7 +253,6 @@
   };
 
   function selectCategory(category) {
-    // Повторное нажатие на Joy возвращает активную кассу "Руки" и сбрасывает балансы в прочерки
     if (activeCategory === "Joy" && category === "Joy") {
       activeCategory = "Руки";
       document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
@@ -332,12 +334,8 @@
       const data = await res.json();
       if (data.status === "success") {
         cachedBalances = data.balances || {};
-        document.getElementById("monthlyIncome").innerText = (data.monthlyIncome || 0).toFixed(2) + " €";
-        document.getElementById("monthlyExpense").innerText = (data.monthlyExpense || 0).toFixed(2) + " €";
-        
-        if (data.categories) {
-          globalCategories = data.categories; // Сохраняем виды расходов для модалки
-        }
+        if (data.categories) globalCategories = data.categories;
+        if (data.whos) globalWhos = data.whos;
 
         if (openJoyAfter && activeCategory === "Joy") {
           renderBalances(cachedBalances);
@@ -348,7 +346,6 @@
     }
   }
 
-  // --- ШАГ 1: ОТПРАВЛЯЕМ ДАННЫЕ НА АНАЛИЗ (ПО КНОПКЕ "СОХРАНИТЬ" ИЛИ ПОСЛЕ ФОТО) ---
   async function requestParseTransaction(photoBase64 = null) {
     if (isSubmitting || activeCategory === "Joy") return;
 
@@ -358,7 +355,10 @@
       const fromW = document.getElementById("walletFrom").value;
       const toW = document.getElementById("walletTo").value;
       const amountVal = document.getElementById("transitAmount").value.trim();
+
       if (!amountVal) { alert("Введите сумму перевода!"); return; }
+      if (fromW === toW) { alert("Нельзя переводить на тот же счет!"); return; }
+
       finalDescription = toW ? `Перевод из ${fromW} в ${toW} ${amountVal}` : `Перевод из ${fromW} в Копилка (Сбережения) ${amountVal}`;
     } else {
       finalDescription = document.getElementById("txInput").value.trim();
@@ -368,7 +368,6 @@
     isSubmitting = true;
     showToast(photoBase64 ? "Распознавание чека..." : "Анализ данных...");
 
-    // Сохраняем исходные данные до подтверждения
     pendingTxData = { category: activeCategory, text: finalDescription, photo: photoBase64 };
 
     try {
@@ -383,7 +382,7 @@
       isSubmitting = false;
       
       if (data.status === "success") {
-        openModal(data.parsed); // Открываем окно предпросмотра!
+        openModal(data.parsed); 
       } else {
         alert("Ошибка: " + data.message);
       }
@@ -393,26 +392,34 @@
     }
   }
 
-  // --- ШАГ 2: ОТКРЫТИЕ И УПРАВЛЕНИЕ МОДАЛКОЙ ---
   function openModal(parsedData) {
     currentModalType = parsedData.type;
     
     document.getElementById("modalAmount").value = parsedData.amount;
     document.getElementById("modalDescription").value = parsedData.description;
     
-    // Заполняем выпадающий список видов (Категорий)
+    // Заполняем Вид транзакции
     const selectCat = document.getElementById("modalCategory");
     selectCat.innerHTML = "";
-    
     let cats = [...globalCategories];
     if (parsedData.view && !cats.includes(parsedData.view)) cats.push(parsedData.view);
-    
     cats.forEach(c => {
       const opt = document.createElement("option");
-      opt.value = c;
-      opt.innerText = c;
+      opt.value = c; opt.innerText = c;
       if (c === parsedData.view) opt.selected = true;
       selectCat.appendChild(opt);
+    });
+
+    // Заполняем Кто / Кому
+    const selectWho = document.getElementById("modalWho");
+    selectWho.innerHTML = "";
+    let whos = [...globalWhos];
+    if (parsedData.who && !whos.includes(parsedData.who)) whos.push(parsedData.who);
+    whos.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w; opt.innerText = w;
+      if (w === parsedData.who) opt.selected = true;
+      selectWho.appendChild(opt);
     });
 
     updateModalTypeBtn();
@@ -429,10 +436,10 @@
       btn.disabled = false;
       if (currentModalType === "income") {
         btn.innerText = "Приход";
-        btn.style.background = "#238636"; // Зеленый
+        btn.style.background = "#238636"; 
       } else {
         btn.innerText = "Расход";
-        btn.style.background = "#eb5757"; // Красный
+        btn.style.background = "#eb5757"; 
       }
     }
   }
@@ -449,7 +456,6 @@
     document.getElementById("transitAmount").value = "";
   }
 
-  // --- ШАГ 3: ОКОНЧАТЕЛЬНОЕ ПОДТВЕРЖДЕНИЕ И ЗАПИСЬ ---
   async function confirmTransaction() {
     document.getElementById("modalOverlay").style.display = "none";
     showToast("Сохранение...");
@@ -459,6 +465,7 @@
       type: pendingTxData.category === "Транзит" ? "transfer" : currentModalType,
       amount: parseFloat(document.getElementById("modalAmount").value),
       view: document.getElementById("modalCategory").value,
+      who: document.getElementById("modalWho").value,
       description: document.getElementById("modalDescription").value
     };
 
@@ -490,7 +497,6 @@
     }
   }
 
-  // --- СЖАТИЕ ФОТО ---
   function handlePhoto(input) {
     if (input.files && input.files[0]) {
       const reader = new FileReader();

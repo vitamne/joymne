@@ -17,14 +17,11 @@
       min-height: 100vh;
     }
     .container { width: 100%; max-width: 400px; text-align: center; }
-    
     .header-text { color: #8c9bae; font-size: 16px; margin-bottom: 25px; }
 
-    /* Пирамидка кругов */
     .pyramid { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 25px; }
     .row { display: flex; gap: 20px; justify-content: center; width: 100%; }
 
-    /* Стили круглых кнопок */
     .circle-btn {
       width: 90px; height: 90px; border-radius: 50%;
       background: #161b22; border: 3px solid #30363d;
@@ -33,92 +30,36 @@
     }
     .circle-btn span { font-size: 12px; color: #8b949e; margin-top: 4px; font-weight: normal; }
 
-    /* Подсветка активных кругов */
-    .circle-joy { border-color: rgba(242, 201, 76, 0.4); }
     .circle-joy.active { border-color: #f2c94c; background: rgba(242, 201, 76, 0.15); box-shadow: 0 0 20px rgba(242, 201, 76, 0.4); }
-
-    .circle-debt { border-color: rgba(235, 87, 87, 0.4); }
     .circle-debt.active { border-color: #eb5757; background: rgba(235, 87, 87, 0.15); box-shadow: 0 0 20px rgba(235, 87, 87, 0.4); }
-
-    .circle-transit { border-color: rgba(108, 117, 125, 0.4); }
     .circle-transit.active { border-color: #adb5bd; background: rgba(108, 117, 125, 0.2); box-shadow: 0 0 20px rgba(108, 117, 125, 0.4); }
-
-    .circle-mila { border-color: rgba(187, 134, 252, 0.4); }
     .circle-mila.active { border-color: #bb86fc; background: rgba(187, 134, 252, 0.15); box-shadow: 0 0 20px rgba(187, 134, 252, 0.4); }
-
-    .circle-bank { border-color: rgba(47, 128, 237, 0.4); }
     .circle-bank.active { border-color: #2f80ed; background: rgba(47, 128, 237, 0.15); box-shadow: 0 0 20px rgba(47, 128, 237, 0.4); }
-
-    .circle-hands { border-color: rgba(39, 174, 96, 0.4); }
     .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 20px rgba(39, 174, 96, 0.4); }
 
-    /* Зона карточки без рамок (парящий блок) */
-    .input-card { background: transparent; padding: 10px 0; border: none; }
-    
-    /* Текстовое поле без рамки */
-    textarea { 
-      width: 100%; padding: 12px; border: none; background: transparent; 
-      color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; 
-      resize: none; margin-bottom: 15px; text-align: center; outline: none; 
-    }
+    .input-card { background: #161b22; padding: 20px; border-radius: 20px; border: 1px solid #30363d; }
+    textarea { width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; }
     textarea::placeholder { color: #484f58; }
 
-    /* Панель Joy */
     #joySummaryPanel { display: none; padding: 5px 0 15px 0; }
-    .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 15px; text-align: center; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+    .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 15px; text-align: center; font-weight: bold; text-transform: uppercase; }
     .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; padding: 0 10px; }
     .val-income { color: #238636; }
     .val-expense { color: #eb5757; }
 
-    /* Интерфейс транзита */
     #transitPanel { display: none; margin-bottom: 15px; }
     .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
-    
-    .transit-circle {
-      width: 85px; height: 85px; border-radius: 50%;
-      color: #fff; border: 2px solid;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      position: relative;
-    }
-    
-    .transit-circle select {
-      background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold;
-      width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
-      appearance: none; -webkit-appearance: none; -moz-appearance: none;
-      padding: 0 5px;
-    }
+    .transit-circle { width: 85px; height: 85px; border-radius: 50%; color: #fff; border: 2px solid; display: flex; align-items: center; justify-content: center; }
+    .transit-circle select { background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold; width: 100%; text-align: center; outline: none; cursor: pointer; }
     .transit-circle select option { background: #161b22; color: #fff; }
 
-    .circle-from-box { 
-      border-color: rgba(235, 87, 87, 0.6); 
-      background: rgba(235, 87, 87, 0.08); 
-      box-shadow: 0 0 12px rgba(235, 87, 87, 0.15); 
-    }
-    .circle-to-box { 
-      border-color: rgba(47, 128, 237, 0.6); 
-      background: rgba(47, 128, 237, 0.08); 
-      box-shadow: 0 0 12px rgba(47, 128, 237, 0.15); 
-    }
+    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); background: rgba(235, 87, 87, 0.08); }
+    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); background: rgba(47, 128, 237, 0.08); }
+    .transit-amount { width: 100%; padding: 12px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 12px; font-size: 16px; text-align: center; box-sizing: border-box; }
 
-    .transit-amount { 
-      width: 100%; padding: 12px; background: transparent; color: #fff; 
-      border: none; border-radius: 12px; font-size: 16px; text-align: center; 
-      box-sizing: border-box; outline: none; 
-    }
-    .transit-amount::placeholder { color: #484f58; }
-
-    /* Кнопки сохранения с анимацией */
     .actions { display: flex; gap: 10px; }
-    button.submit-btn { 
-      flex: 2; background: #238636; color: white; border: none; padding: 14px; 
-      border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; 
-      transition: background 0.3s ease, transform 0.1s ease; 
-    }
-    button.submit-btn.success {
-      background: #2f80ed !important;
-      box-shadow: 0 0 15px rgba(47, 128, 237, 0.5);
-    }
-    button.photo-btn { flex: 1; background: #161b22; border: 1px solid #30363d; color: white; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
 
     #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #21262d; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; border: 1px solid #30363d; z-index: 1000; }
   </style>
@@ -128,7 +69,6 @@
 <div class="container">
   <div class="header-text">joymne</div>
 
-  <!-- Пирамидка кругов -->
   <div class="pyramid">
     <div class="row">
       <div class="circle-btn circle-joy" id="btn-Joy" onclick="selectCategory('Joy')">
@@ -162,14 +102,11 @@
     </div>
   </div>
 
-  <!-- Парящая карточка без рамок -->
   <div class="input-card">
-    
     <div id="standardInput">
-      <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
+      <textarea id="txInput" rows="2" placeholder="Например: 8 хлеб или ЗП 5000..."></textarea>
     </div>
 
-    <!-- Блок транзита -->
     <div id="transitPanel">
       <div class="transit-circles-row">
         <div class="transit-circle circle-from-box">
@@ -178,16 +115,14 @@
             <option value="Мила">Мила</option>
             <option value="Банк">Банк</option>
             <option value="Долги">Долги</option>
-            <option value="Транзит">Транзит</option>
           </select>
         </div>
         <div style="font-size: 20px; color: #8b949e;">➔</div>
         <div class="transit-circle circle-to-box">
           <select id="walletTo">
-            <option value="Транзит">Транзит</option>
+            <option value="Банк">Банк</option>
             <option value="Руки">Руки</option>
             <option value="Мила">Мила</option>
-            <option value="Банк">Банк</option>
             <option value="Долги">Долги</option>
           </select>
         </div>
@@ -195,7 +130,6 @@
       <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
     </div>
 
-    <!-- Панель Joy -->
     <div id="joySummaryPanel">
       <div class="summary-title">За текущий месяц</div>
       <div class="summary-inline">
@@ -207,7 +141,7 @@
     <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
 
     <div class="actions" id="actionButtons">
-      <button class="submit-btn" id="submitBtn" onclick="submitTransaction()">Сохранить</button>
+      <button class="submit-btn" onclick="submitTransaction()">Сохранить</button>
       <button class="photo-btn" id="photoBtn" onclick="document.getElementById('photoInput').click()">📷 Чек</button>
     </div>
   </div>
@@ -219,19 +153,23 @@
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyouTYwZVPHbgb1jF7JoRmTIqW7novwK4hcwWCqlKDBq-4ExUp4gqx5deF5V0IiPJc7Dg/exec";
   
   let activeCategory = "Руки"; 
+  let isSubmitting = false;
   let cachedBalances = {};
 
   window.onload = function() {
     loadBalances();
+    const savedMsg = sessionStorage.getItem("joymne_toast");
+    if (savedMsg) {
+      showToast(savedMsg);
+      sessionStorage.removeItem("joymne_toast");
+    }
   };
 
   function selectCategory(category) {
     if (activeCategory === "Joy" && category === "Joy") {
       activeCategory = "Руки";
       document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
-      const handsBtn = document.getElementById("btn-Руки");
-      if (handsBtn) handsBtn.classList.add('active');
-      
+      document.getElementById("btn-Руки").classList.add('active');
       renderDashes();
 
       document.getElementById("standardInput").style.display = "block";
@@ -242,10 +180,8 @@
     }
 
     activeCategory = category;
-    
     document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById("btn-" + category);
-    if (activeBtn) activeBtn.classList.add('active');
+    document.getElementById("btn-" + category).classList.add('active');
 
     const standardInput = document.getElementById("standardInput");
     const transitPanel = document.getElementById("transitPanel");
@@ -260,7 +196,6 @@
     if (category === "Joy") {
       joySummaryPanel.style.display = "block";
       actionButtons.style.display = "none"; 
-      
       if (Object.keys(cachedBalances).length === 0) {
         loadBalances(true);
       } else {
@@ -309,7 +244,6 @@
         cachedBalances = data.balances || {};
         document.getElementById("monthlyIncome").innerText = (data.monthlyIncome || 0).toFixed(2) + " €";
         document.getElementById("monthlyExpense").innerText = (data.monthlyExpense || 0).toFixed(2) + " €";
-
         if (openJoyAfter && activeCategory === "Joy") {
           renderBalances(cachedBalances);
         }
@@ -320,7 +254,7 @@
   }
 
   async function submitTransaction(photoBase64 = null) {
-    if (activeCategory === "Joy") return;
+    if (isSubmitting || activeCategory === "Joy") return;
 
     let finalDescription = "";
 
@@ -333,12 +267,6 @@
         alert("Введите сумму перевода!");
         return;
       }
-
-      if (fromWallet === toWallet) {
-        alert("Нельзя переводить на тот же счет!");
-        return;
-      }
-
       finalDescription = `Перевод из ${fromWallet} в ${toWallet} ${amountVal}`;
     } else {
       finalDescription = document.getElementById("txInput").value.trim();
@@ -348,38 +276,29 @@
       }
     }
 
-    const submitBtn = document.getElementById("submitBtn");
-    submitBtn.classList.add("success");
-    submitBtn.innerText = "Учтено ✓";
+    isSubmitting = true;
+    showToast("Отправка данных...");
 
-    if (activeCategory === "Транзит") {
-      document.getElementById("transitAmount").value = "";
-    } else {
-      document.getElementById("txInput").value = "";
-    }
+    try {
+      const response = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ category: activeCategory, text: finalDescription, photo: photoBase64 }),
+        redirect: "follow"
+      });
 
-    setTimeout(() => {
-      submitBtn.classList.remove("success");
-      submitBtn.innerText = "Сохранить";
-    }, 1000);
-
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ category: activeCategory, text: finalDescription, photo: photoBase64 }),
-      redirect: "follow"
-    })
-    .then(response => response.json())
-    .then(data => {
+      const data = await response.json();
       if (data.status === "success") {
-        loadBalances();
+        sessionStorage.setItem("joymne_toast", "✓ Успешно сохранено!");
+        window.location.replace(window.location.pathname + "?t=" + Date.now());
       } else {
         alert("Ошибка сервера: " + (data.message || "Неизвестная ошибка"));
+        isSubmitting = false;
       }
-    })
-    .catch(err => {
+    } catch (err) {
       alert("Ошибка соединения с таблицей");
-    });
+      isSubmitting = false;
+    }
   }
 
   function handlePhoto(input) {
@@ -396,7 +315,7 @@
     const toast = document.getElementById("toast");
     toast.innerText = msg;
     toast.style.display = "block";
-    setTimeout(() => { toast.style.display = "none"; }, 2500);
+    setTimeout(() => { toast.style.display = "none"; }, 3000);
   }
 </script>
 

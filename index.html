@@ -102,6 +102,12 @@
     .modal-field { margin-bottom: 12px; text-align: left; }
     .modal-field label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 4px; padding-left: 5px; }
     .modal-field input, .modal-field select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; appearance: none; -webkit-appearance: none; }
+    
+    /* Стили для строки "Кто / Кому" с кнопкой плюсика */
+    .who-row { display: flex; gap: 8px; align-items: center; }
+    .who-row select { flex: 1; }
+    .add-who-btn { width: 44px; height: 44px; background: #238636; color: #fff; border: none; border-radius: 12px; font-size: 22px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
     .modal-actions { display: flex; gap: 10px; margin-top: 15px; }
     .modal-btn-cancel { flex: 1; background: #30363d; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
     .modal-btn-confirm { flex: 2; background: #238636; color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
@@ -214,7 +220,10 @@
 
     <div class="modal-field">
       <label>Кто / Кому:</label>
-      <select id="modalWho"></select>
+      <div class="who-row">
+        <select id="modalWho"></select>
+        <button class="add-who-btn" onclick="promptAddNewWho()" title="Добавить нового">+</button>
+      </div>
     </div>
 
     <div class="modal-field">
@@ -411,19 +420,48 @@
     });
 
     // Заполняем Кто / Кому
-    const selectWho = document.getElementById("modalWho");
-    selectWho.innerHTML = "";
-    let whos = [...globalWhos];
-    if (parsedData.who && !whos.includes(parsedData.who)) whos.push(parsedData.who);
-    whos.forEach(w => {
-      const opt = document.createElement("option");
-      opt.value = w; opt.innerText = w;
-      if (w === parsedData.who) opt.selected = true;
-      selectWho.appendChild(opt);
-    });
+    updateWhoDropdown(parsedData.who);
 
     updateModalTypeBtn();
     document.getElementById("modalOverlay").style.display = "flex";
+  }
+
+  function updateWhoDropdown(selectedWho = "Без имени") {
+    const selectWho = document.getElementById("modalWho");
+    selectWho.innerHTML = "";
+    let whos = [...globalWhos];
+    if (selectedWho && !whos.includes(selectedWho)) whos.push(selectedWho);
+    whos.forEach(w => {
+      const opt = document.createElement("option");
+      opt.value = w; opt.innerText = w;
+      if (w === selectedWho) opt.selected = true;
+      selectWho.appendChild(opt);
+    });
+  }
+
+  // Функция добавления нового Кто через кнопку "+"
+  async function promptAddNewWho() {
+    const newName = prompt("Введите имя нового контрагента / должника:");
+    if (!newName || !newName.trim()) return;
+    
+    const trimmed = newName.trim();
+    if (!globalWhos.includes(trimmed)) {
+      globalWhos.push(trimmed);
+    }
+    updateWhoDropdown(trimmed); // Выбираем созданное имя в списке
+
+    // Фоном отправляем на сервер, чтобы записать на лист "Кто" в таблицу
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ actionType: "add_who", newWho: trimmed }),
+        redirect: "follow"
+      });
+      showToast("✓ Контрагент добавлен!");
+    } catch (e) {
+      console.error("Не удалось сохранить имя на сервере", e);
+    }
   }
 
   function updateModalTypeBtn() {

@@ -63,7 +63,7 @@
     .val-income { color: #238636; }
     .val-expense { color: #eb5757; }
 
-    /* Интерфейс транзита */
+    /* Интерфейс транзита с мягкими кружками */
     #transitPanel { display: none; margin-bottom: 15px; }
     .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
     
@@ -74,15 +74,15 @@
     }
     
     .transit-circle select {
-      background: transparent; color: #fff; border: none; font-size: 14px; font-weight: bold;
+      background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold;
       width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
       appearance: none; -webkit-appearance: none; -moz-appearance: none;
       padding: 0 5px;
     }
     .transit-circle select option { background: #161b22; color: #fff; }
 
-    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); }
-    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); }
+    .circle-from-box { border-color: rgba(235, 87, 87, 0.4); background: rgba(235, 87, 87, 0.1); }
+    .circle-to-box { border-color: rgba(47, 128, 237, 0.4); background: rgba(47, 128, 237, 0.1); }
 
     .transit-amount { width: 100%; padding: 12px; background: transparent; color: #fff; border: none; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; }
     .transit-amount::placeholder { color: #484f58; }
@@ -103,7 +103,6 @@
     .modal-field label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 4px; padding-left: 5px; }
     .modal-field input, .modal-field select { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 16px; box-sizing: border-box; outline: none; appearance: none; -webkit-appearance: none; }
     
-    /* Стили для строки "Кто / Кому" с кнопкой плюсика */
     .who-row { display: flex; gap: 8px; align-items: center; }
     .who-row select { flex: 1; }
     .add-who-btn { width: 44px; height: 44px; background: #238636; color: #fff; border: none; border-radius: 12px; font-size: 22px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -158,7 +157,7 @@
       <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
     </div>
 
-    <!-- Блок транзита -->
+    <!-- Блок транзита (мягкие кружки без лишних подписей) -->
     <div id="transitPanel">
       <div class="transit-circles-row">
         <div class="transit-circle circle-from-box">
@@ -254,11 +253,6 @@
 
   window.onload = function() {
     loadBalances();
-    const savedMsg = sessionStorage.getItem("joymne_toast");
-    if (savedMsg) {
-      showToast(savedMsg);
-      sessionStorage.removeItem("joymne_toast");
-    }
   };
 
   function selectCategory(category) {
@@ -321,7 +315,11 @@
     document.getElementById("balMila").innerText = mila.toFixed(2) + " €";
     document.getElementById("balBank").innerText = bank.toFixed(2) + " €";
     document.getElementById("balHands").innerText = hands.toFixed(2) + " €";
-    document.getElementById("balDebts").innerText = debts.toFixed(2) + " €";
+    
+    const debtEl = document.getElementById("balDebts");
+    debtEl.innerText = (debts > 0 ? "+" : "") + debts.toFixed(2) + " €";
+    debtEl.style.color = debts < 0 ? "#eb5757" : (debts > 0 ? "#238636" : "#fff");
+
     document.getElementById("balTransit").innerText = transit.toFixed(2) + " €";
     
     const total = mila + bank + hands + debts + transit;
@@ -333,6 +331,7 @@
     document.getElementById("balBank").innerText = "---";
     document.getElementById("balHands").innerText = "---";
     document.getElementById("balDebts").innerText = "---";
+    document.getElementById("balDebts").style.color = "#fff";
     document.getElementById("balTransit").innerText = "---";
     document.getElementById("balJoy").innerText = "---";
   }
@@ -345,6 +344,9 @@
         cachedBalances = data.balances || {};
         if (data.categories) globalCategories = data.categories;
         if (data.whos) globalWhos = data.whos;
+        
+        document.getElementById("monthlyIncome").innerText = (data.monthlyIncome || 0).toFixed(2) + " €";
+        document.getElementById("monthlyExpense").innerText = (data.monthlyExpense || 0).toFixed(2) + " €";
 
         if (openJoyAfter && activeCategory === "Joy") {
           renderBalances(cachedBalances);
@@ -356,7 +358,7 @@
   }
 
   async function requestParseTransaction(photoBase64 = null) {
-    if (isSubmitting || activeCategory === "Joy") return;
+    if (activeCategory === "Joy") return;
 
     let finalDescription = "";
 
@@ -368,15 +370,13 @@
       if (!amountVal) { alert("Введите сумму перевода!"); return; }
       if (fromW === toW) { alert("Нельзя переводить на тот же счет!"); return; }
 
-      finalDescription = toW ? `Перевод из ${fromW} в ${toW} ${amountVal}` : `Перевод из ${fromW} в Копилка (Сбережения) ${amountVal}`;
+      finalDescription = `Перевод из ${fromW} в ${toW} ${amountVal}`;
     } else {
       finalDescription = document.getElementById("txInput").value.trim();
       if (!finalDescription && !photoBase64) { alert("Введите описание или сумму!"); return; }
     }
 
-    isSubmitting = true;
     showToast(photoBase64 ? "Распознавание чека..." : "Анализ данных...");
-
     pendingTxData = { category: activeCategory, text: finalDescription, photo: photoBase64 };
 
     try {
@@ -388,7 +388,6 @@
       });
 
       const data = await response.json();
-      isSubmitting = false;
       
       if (data.status === "success") {
         openModal(data.parsed); 
@@ -397,7 +396,6 @@
       }
     } catch (err) {
       alert("Ошибка сети");
-      isSubmitting = false;
     }
   }
 
@@ -407,7 +405,6 @@
     document.getElementById("modalAmount").value = parsedData.amount;
     document.getElementById("modalDescription").value = parsedData.description;
     
-    // Заполняем Вид транзакции
     const selectCat = document.getElementById("modalCategory");
     selectCat.innerHTML = "";
     let cats = [...globalCategories];
@@ -419,9 +416,7 @@
       selectCat.appendChild(opt);
     });
 
-    // Заполняем Кто / Кому
     updateWhoDropdown(parsedData.who);
-
     updateModalTypeBtn();
     document.getElementById("modalOverlay").style.display = "flex";
   }
@@ -439,7 +434,6 @@
     });
   }
 
-  // Функция добавления нового Кто через кнопку "+"
   async function promptAddNewWho() {
     const newName = prompt("Введите имя нового контрагента / должника:");
     if (!newName || !newName.trim()) return;
@@ -448,9 +442,8 @@
     if (!globalWhos.includes(trimmed)) {
       globalWhos.push(trimmed);
     }
-    updateWhoDropdown(trimmed); // Выбираем созданное имя в списке
+    updateWhoDropdown(trimmed); 
 
-    // Фоном отправляем на сервер, чтобы записать на лист "Кто" в таблицу
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
@@ -496,8 +489,10 @@
 
   async function confirmTransaction() {
     document.getElementById("modalOverlay").style.display = "none";
-    showToast("Сохранение...");
-    isSubmitting = true;
+    showToast("✓ Успешно сохранено!");
+    
+    document.getElementById("txInput").value = "";
+    document.getElementById("transitAmount").value = "";
 
     const confirmedData = {
       type: pendingTxData.category === "Транзит" ? "transfer" : currentModalType,
@@ -508,7 +503,7 @@
     };
 
     try {
-      const response = await fetch(APPS_SCRIPT_URL, {
+      fetch(APPS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ 
@@ -519,19 +514,11 @@
           confirmed: confirmedData
         }),
         redirect: "follow"
+      }).then(() => {
+        loadBalances(); 
       });
-
-      const data = await response.json();
-      if (data.status === "success") {
-        sessionStorage.setItem("joymne_toast", "✓ Успешно сохранено!");
-        window.location.replace(window.location.pathname + "?t=" + Date.now());
-      } else {
-        alert("Ошибка сервера: " + data.message);
-        isSubmitting = false;
-      }
     } catch (err) {
-      alert("Ошибка сети при сохранении");
-      isSubmitting = false;
+      console.error("Ошибка фоновой отправки", err);
     }
   }
 

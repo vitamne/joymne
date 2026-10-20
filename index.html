@@ -3,196 +3,130 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>joymne</title>
+  <title>Учет расходов Mila D.O.O.</title>
   <style>
-    body { 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-      background: #0b0f19; 
-      margin: 0; 
-      padding: 20px; 
-      color: #fff; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container { width: 100%; max-width: 400px; text-align: center; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #121212; margin: 0; padding: 20px; color: #e0e0e0; }
+    .container { max-width: 420px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+    h2 { text-align: center; margin-bottom: 20px; color: #4dabf7; }
     
-    .header-text { color: #8c9bae; font-size: 16px; margin-bottom: 25px; }
+    .balances-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+    .balance-card { background: #2c2c2c; padding: 12px; border-radius: 12px; border: 1px solid #333; text-align: center; }
+    .balance-card span { display: block; font-size: 12px; color: #aaa; }
+    .balance-card strong { font-size: 16px; color: #fff; }
 
-    /* Пирамидка кругов */
-    .pyramid { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 25px; }
-    .row { display: flex; gap: 20px; justify-content: center; width: 100%; }
-
-    /* Стили круглых кнопок */
-    .circle-btn {
-      width: 90px; height: 90px; border-radius: 50%;
-      background: #161b22; border: 3px solid #30363d;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      cursor: pointer; transition: all 0.2s; color: #fff; font-weight: bold;
-    }
-    .circle-btn span { font-size: 12px; color: #8b949e; margin-top: 4px; font-weight: normal; }
-
-    /* Подсветка активных кругов */
-    .circle-joy { border-color: rgba(242, 201, 76, 0.4); }
-    .circle-joy.active { border-color: #f2c94c; background: rgba(242, 201, 76, 0.15); box-shadow: 0 0 20px rgba(242, 201, 76, 0.4); }
-
-    .circle-debt { border-color: rgba(235, 87, 87, 0.4); }
-    .circle-debt.active { border-color: #eb5757; background: rgba(235, 87, 87, 0.15); box-shadow: 0 0 20px rgba(235, 87, 87, 0.4); }
-
-    .circle-transit { border-color: rgba(108, 117, 125, 0.4); }
-    .circle-transit.active { border-color: #adb5bd; background: rgba(108, 117, 125, 0.2); box-shadow: 0 0 20px rgba(108, 117, 125, 0.4); }
-
-    .circle-mila { border-color: rgba(187, 134, 252, 0.4); }
-    .circle-mila.active { border-color: #bb86fc; background: rgba(187, 134, 252, 0.15); box-shadow: 0 0 20px rgba(187, 134, 252, 0.4); }
-
-    .circle-bank { border-color: rgba(47, 128, 237, 0.4); }
-    .circle-bank.active { border-color: #2f80ed; background: rgba(47, 128, 237, 0.15); box-shadow: 0 0 20px rgba(47, 128, 237, 0.4); }
-
-    .circle-hands { border-color: rgba(39, 174, 96, 0.4); }
-    .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 20px rgba(39, 174, 96, 0.4); }
-
-    /* Чистая зона ввода без лишних рамок карточек */
-    .input-card { background: transparent; padding: 0; border: none; }
-    textarea { width: 100%; padding: 12px; border: none; background: transparent; color: #fff; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; outline: none; text-align: center; }
-    textarea::placeholder { color: #484f58; }
-
-    /* Панель Joy */
-    #joySummaryPanel { display: none; padding: 5px 0 15px 0; }
-    .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 15px; text-align: center; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-    .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; padding: 0 10px; }
-    .val-income { color: #238636; }
-    .val-expense { color: #eb5757; }
-
-    /* Интерфейс транзита */
-    #transitPanel { display: none; margin-bottom: 15px; }
-    .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
+    .categories { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .cat-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
     
-    .transit-circle {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: #0d1117; color: #fff; border: 3px solid #30363d;
-      display: flex; align-items: center; justify-content: center;
+    .cat-btn { 
+      padding: 12px 24px; border: 2px solid #444; background: #2c2c2c; color: #e0e0e0;
+      border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.2s;
+      flex: 1; max-width: 140px; text-align: center;
     }
-    .transit-circle select {
-      background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold;
-      width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
-      appearance: none; -webkit-appearance: none; -moz-appearance: none;
-      padding: 0 5px;
+    .cat-btn.active { background: #1a73e8; color: #fff; border-color: #1a73e8; box-shadow: 0 0 10px rgba(26,115,232,0.4); }
+
+    #standardInputGroup { display: block; }
+    textarea { width: 100%; padding: 14px; border: 1px solid #444; background: #2c2c2c; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; }
+    textarea::placeholder { color: #888; }
+
+    #transitScreen { display: none; background: #252525; padding: 20px; border-radius: 16px; margin-bottom: 15px; border: 1px solid #444; text-align: center; }
+    .transit-circles-container { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
+    
+    .transit-circle-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .transit-label { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+    .circle-from { 
+      background: #d93838; color: white; width: 75px; height: 75px; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px;
+      border: none; outline: none; cursor: pointer; box-shadow: 0 4px 10px rgba(217,56,56,0.4);
+      text-align: center;
     }
-    .transit-circle select option { background: #161b22; color: #fff; }
+    .circle-to { 
+      background: #1a73e8; color: white; width: 75px; height: 75px; border-radius: 50%; 
+      display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px;
+      border: none; outline: none; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.4);
+      text-align: center;
+    }
 
-    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); }
-    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); }
+    .transit-amount-input { width: 100%; padding: 14px; border: 1px solid #555; background: #2c2c2c; color: #fff; border-radius: 12px; font-size: 18px; text-align: center; box-sizing: border-box; }
+    .transit-amount-input::placeholder { color: #888; }
 
-    .transit-amount { width: 100%; padding: 12px; background: transparent; color: #fff; border: none; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; }
-    .transit-amount::placeholder { color: #484f58; }
-
-    /* Кнопки сохранения */
     .actions { display: flex; gap: 10px; }
-    button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-    button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-
-    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #21262d; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; border: 1px solid #30363d; z-index: 1000; }
+    button.submit-btn { flex: 2; background: #2ea44f; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    button.photo-btn { flex: 1; background: #484f58; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; z-index: 1000; border: 1px solid #555; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <div class="header-text">joymne</div>
+  <h2>Mila D.O.O. Учет</h2>
 
-  <!-- Пирамидка кругов -->
-  <div class="pyramid">
-    <div class="row">
-      <div class="circle-btn circle-joy" id="btn-Joy" onclick="selectCategory('Joy')">
-        Joy
-        <span id="balJoy">---</span>
-      </div>
+  <div class="balances-grid" id="balancesContainer">
+    <div class="balance-card"><span>Мила</span><strong id="balMila">...</strong></div>
+    <div class="balance-card"><span>Банк</span><strong id="balBank">...</strong></div>
+    <div class="balance-card"><span>Руки</span><strong id="balHands">...</strong></div>
+    <div class="balance-card"><span>Долги</span><strong id="balDebts">...</strong></div>
+  </div>
+
+  <div class="categories">
+    <div class="cat-row">
+      <button class="cat-btn" onclick="selectCategory('Мила')">Мила</button>
+      <button class="cat-btn" onclick="selectCategory('Банк')">Банк</button>
     </div>
-    <div class="row">
-      <div class="circle-btn circle-debt" id="btn-Долги" onclick="selectCategory('Долги')">
-        Долги
-        <span id="balDebts">---</span>
-      </div>
-      <div class="circle-btn circle-transit" id="btn-Транзит" onclick="selectCategory('Транзит')">
-        Транзит
-        <span id="balTransit">---</span>
-      </div>
+    <div class="cat-row">
+      <button class="cat-btn active" onclick="selectCategory('Руки')">Руки</button>
+      <button class="cat-btn" onclick="selectCategory('Долги')">Долги</button>
     </div>
-    <div class="row">
-      <div class="circle-btn circle-mila" id="btn-Мила" onclick="selectCategory('Мила')">
-        Мила
-        <span id="balMila">---</span>
-      </div>
-      <div class="circle-btn circle-bank" id="btn-Банк" onclick="selectCategory('Банк')">
-        Банк
-        <span id="balBank">---</span>
-      </div>
-      <div class="circle-btn circle-hands active" id="btn-Руки" onclick="selectCategory('Руки')">
-        Руки
-        <span id="balHands">---</span>
-      </div>
+    <div class="cat-row">
+      <button class="cat-btn" onclick="selectCategory('Транзит')">Транзит</button>
     </div>
   </div>
 
-  <!-- Карточка ввода -->
-  <div class="input-card">
-    
-    <div id="standardInput">
-      <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
-    </div>
+  <div id="standardInputGroup">
+    <textarea id="txInput" rows="2" placeholder="Например: 8 хлеб или получил 50..."></textarea>
+  </div>
 
-    <!-- Блок транзита -->
-    <div id="transitPanel">
-      <div class="transit-circles-row">
-        <div class="transit-circle circle-from-box">
-          <select id="walletFrom">
-            <option value="Руки">Руки</option>
-            <option value="Мила">Мила</option>
-            <option value="Банк">Банк</option>
-            <option value="Долги">Долги</option>
-            <option value="Транзит">Транзит</option>
-          </select>
-        </div>
-        <div style="font-size: 20px; color: #8b949e;">➔</div>
-        <div class="transit-circle circle-to-box">
-          <select id="walletTo">
-            <option value="Транзит">Транзит</option>
-            <option value="Руки">Руки</option>
-            <option value="Мила">Мила</option>
-            <option value="Банк">Банк</option>
-            <option value="Долги">Долги</option>
-          </select>
-        </div>
+  <div id="transitScreen">
+    <div class="transit-circles-container">
+      <div class="transit-circle-wrapper">
+        <span class="transit-label" style="color: #ff6b6b;">ИЗ</span>
+        <select id="walletFrom" class="circle-from">
+          <option value="Руки" style="background:#222; color:#fff;">Руки</option>
+          <option value="Мила" style="background:#222; color:#fff;">Мила</option>
+          <option value="Банк" style="background:#222; color:#fff;">Банк</option>
+        </select>
       </div>
-      <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
-    </div>
-
-    <!-- Панель Joy -->
-    <div id="joySummaryPanel">
-      <div class="summary-title">За текущий месяц</div>
-      <div class="summary-inline">
-        <span class="val-income" id="monthlyIncome">0.00 €</span>
-        <span class="val-expense" id="monthlyExpense">0.00 €</span>
+      <div style="font-size: 24px; color: #888; font-weight: bold;">➔</div>
+      <div class="transit-circle-wrapper">
+        <span class="transit-label" style="color: #4dabf7;">В</span>
+        <select id="walletTo" class="circle-to">
+          <option value="" style="background:#222; color:#fff;">Копилка</option>
+          <option value="Мила" style="background:#222; color:#fff;">Мила</option>
+          <option value="Банк" style="background:#222; color:#fff;">Банк</option>
+          <option value="Руки" style="background:#222; color:#fff;">Руки</option>
+        </select>
       </div>
     </div>
+    <input type="text" id="transitAmount" class="transit-amount-input" placeholder="Сумма перевода (€)">
+  </div>
 
-    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
+  <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
 
-    <div class="actions" id="actionButtons">
-      <button class="submit-btn" onclick="submitTransaction()">Сохранить</button>
-      <button class="photo-btn" id="photoBtn" onclick="document.getElementById('photoInput').click()">📷 Чек</button>
-    </div>
+  <div class="actions" id="actionButtons">
+    <button class="submit-btn" onclick="submitTransaction()">Сохранить</button>
+    <button class="photo-btn" id="photoBtn" onclick="document.getElementById('photoInput').click()">📷 Чек</button>
   </div>
 </div>
 
 <div id="toast">Сохранение...</div>
 
 <script>
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyouTYwZVPHbgb1jF7JoRmTIqW7novwK4hcwWCqlKDBq-4ExUp4gqx5deF5V0IiPJc7Dg/exec";
+  // === ВАЖНО: ВСТАВЬТЕ СЮДА ВАШ АКТУАЛЬНЫЙ URL ===
+  const APPS_SCRIPT_URL = "ВАШ_WEB_APP_URL_ЗДЕСЬ";
   
-  let activeCategory = "Руки"; 
+  let activeCategory = "Руки"; // По умолчанию выбрана касса "Руки"
   let isSubmitting = false;
-  let cachedBalances = {};
 
   window.onload = function() {
     loadBalances();
@@ -204,87 +138,35 @@
   };
 
   function selectCategory(category) {
-    if (activeCategory === "Joy" && category === "Joy") {
-      activeCategory = "Руки";
-      document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
-      document.getElementById("btn-Руки").classList.add('active');
-      renderDashes();
-
-      document.getElementById("standardInput").style.display = "block";
-      document.getElementById("transitPanel").style.display = "none";
-      document.getElementById("joySummaryPanel").style.display = "none";
-      document.getElementById("actionButtons").style.display = "flex";
-      return;
-    }
-
     activeCategory = category;
-    document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById("btn-" + category).classList.add('active');
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.innerText === category);
+    });
 
-    const standardInput = document.getElementById("standardInput");
-    const transitPanel = document.getElementById("transitPanel");
-    const joySummaryPanel = document.getElementById("joySummaryPanel");
-    const actionButtons = document.getElementById("actionButtons");
+    const standardInput = document.getElementById("standardInputGroup");
+    const transitScreen = document.getElementById("transitScreen");
+    const photoBtn = document.getElementById("photoBtn");
 
-    standardInput.style.display = "none";
-    transitPanel.style.display = "none";
-    joySummaryPanel.style.display = "none";
-    actionButtons.style.display = "flex";
-
-    if (category === "Joy") {
-      joySummaryPanel.style.display = "block";
-      actionButtons.style.display = "none"; 
-      if (Object.keys(cachedBalances).length === 0) {
-        loadBalances(true);
-      } else {
-        renderBalances(cachedBalances);
-      }
-    } else if (category === "Транзит") {
-      transitPanel.style.display = "block";
-      renderDashes();
+    if (category === "Транзит") {
+      standardInput.style.display = "none";
+      transitScreen.style.display = "block";
+      photoBtn.style.display = "none"; 
     } else {
       standardInput.style.display = "block";
-      renderDashes();
+      transitScreen.style.display = "none";
+      photoBtn.style.display = "block"; 
     }
   }
 
-  function renderBalances(balances) {
-    const mila = balances["Мила"] || 0;
-    const bank = balances["Банк"] || 0;
-    const hands = balances["Руки"] || 0;
-    const debts = balances["Долги"] || 0;
-    const transit = balances["Транзит"] || 0;
-
-    document.getElementById("balMila").innerText = mila.toFixed(2) + " €";
-    document.getElementById("balBank").innerText = bank.toFixed(2) + " €";
-    document.getElementById("balHands").innerText = hands.toFixed(2) + " €";
-    document.getElementById("balDebts").innerText = debts.toFixed(2) + " €";
-    document.getElementById("balTransit").innerText = transit.toFixed(2) + " €";
-    
-    const total = mila + bank + hands + debts + transit;
-    document.getElementById("balJoy").innerText = total.toFixed(2) + " €";
-  }
-
-  function renderDashes() {
-    document.getElementById("balMila").innerText = "---";
-    document.getElementById("balBank").innerText = "---";
-    document.getElementById("balHands").innerText = "---";
-    document.getElementById("balDebts").innerText = "---";
-    document.getElementById("balTransit").innerText = "---";
-    document.getElementById("balJoy").innerText = "---";
-  }
-
-  async function loadBalances(openJoyAfter = false) {
+  async function loadBalances() {
     try {
       const res = await fetch(`${APPS_SCRIPT_URL}?action=getBalances`);
       const data = await res.json();
       if (data.status === "success") {
-        cachedBalances = data.balances || {};
-        document.getElementById("monthlyIncome").innerText = (data.monthlyIncome || 0).toFixed(2) + " €";
-        document.getElementById("monthlyExpense").innerText = (data.monthlyExpense || 0).toFixed(2) + " €";
-        if (openJoyAfter && activeCategory === "Joy") {
-          renderBalances(cachedBalances);
-        }
+        document.getElementById("balMila").innerText = (data.balances["Мила"] || 0).toFixed(2) + " €";
+        document.getElementById("balBank").innerText = (data.balances["Банк"] || 0).toFixed(2) + " €";
+        document.getElementById("balHands").innerText = (data.balances["Руки"] || 0).toFixed(2) + " €";
+        document.getElementById("balDebts").innerText = (data.balances["Долги"] || 0).toFixed(2) + " €";
       }
     } catch (e) {
       console.error("Не удалось загрузить балансы", e);
@@ -292,7 +174,10 @@
   }
 
   async function submitTransaction(photoBase64 = null) {
-    if (isSubmitting || activeCategory === "Joy") return;
+    if (isSubmitting) {
+      showToast("⏳ Предыдущая транзакция еще обрабатывается...");
+      return;
+    }
 
     let finalDescription = "";
 
@@ -305,17 +190,23 @@
         alert("Введите сумму перевода!");
         return;
       }
-      finalDescription = `Перевод из ${fromWallet} в ${toWallet} ${amountVal}`;
+      finalDescription = toWallet 
+        ? `Перевод из ${fromWallet} в ${toWallet} ${amountVal}` 
+        : `Перевод из ${fromWallet} в Копилка (Сбережения) ${amountVal}`;
     } else {
       finalDescription = document.getElementById("txInput").value.trim();
       if (!finalDescription && !photoBase64) {
-        alert("Введите описание или сумму!");
+        alert("Введите описание или прикрепите чек!");
         return;
       }
     }
 
     isSubmitting = true;
-    showToast("Отправка данных...");
+    showToast("Отправка и распознавание...");
+
+    // Очищаем форму для следующего ввода сразу
+    document.getElementById("txInput").value = "";
+    document.getElementById("transitAmount").value = "";
 
     try {
       const response = await fetch(APPS_SCRIPT_URL, {
@@ -327,25 +218,58 @@
 
       const data = await response.json();
       if (data.status === "success") {
-        sessionStorage.setItem("joymne_toast", "✓ Успешно сохранено!");
-        window.location.replace(window.location.pathname + "?t=" + Date.now());
+        showToast("✓ Успешно сохранено!");
+        loadBalances();
       } else {
         alert("Ошибка сервера: " + (data.message || "Неизвестная ошибка"));
-        isSubmitting = false;
       }
     } catch (err) {
       alert("Ошибка соединения с таблицей");
+    } finally {
       isSubmitting = false;
     }
   }
 
+  // === АВТОМАТИЧЕСКОЕ СЖАТИЕ ФОТО ДЛЯ УСКОРЕНИЯ И ИЗБЕЖАНИЯ ОШИБОК ===
   function handlePhoto(input) {
     if (input.files && input.files[0]) {
+      const file = input.files[0];
       const reader = new FileReader();
+      
       reader.onload = function(e) {
-        submitTransaction(e.target.result);
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1200;
+          const MAX_HEIGHT = 1200;
+          let width = img.width;
+          let height = img.height;
+
+          // Масштабирование
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Сжатие до JPEG 60% качества
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+          submitTransaction(compressedDataUrl); // Отправляем легкий файл!
+        };
+        img.src = e.target.result;
       };
-      reader.readAsDataURL(input.files[0]);
+      reader.readAsDataURL(file);
     }
   }
 
@@ -353,7 +277,7 @@
     const toast = document.getElementById("toast");
     toast.innerText = msg;
     toast.style.display = "block";
-    setTimeout(() => { toast.style.display = "none"; }, 3000);
+    setTimeout(() => { toast.style.display = "none"; }, 3500);
   }
 </script>
 

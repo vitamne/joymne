@@ -17,11 +17,14 @@
       min-height: 100vh;
     }
     .container { width: 100%; max-width: 400px; text-align: center; }
+    
     .header-text { color: #8c9bae; font-size: 16px; margin-bottom: 25px; }
 
+    /* Пирамидка кругов */
     .pyramid { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 25px; }
     .row { display: flex; gap: 20px; justify-content: center; width: 100%; }
 
+    /* Стили круглых кнопок */
     .circle-btn {
       width: 90px; height: 90px; border-radius: 50%;
       background: #161b22; border: 3px solid #30363d;
@@ -30,33 +33,61 @@
     }
     .circle-btn span { font-size: 12px; color: #8b949e; margin-top: 4px; font-weight: normal; }
 
+    /* Подсветка активных кругов */
+    .circle-joy { border-color: rgba(242, 201, 76, 0.4); }
     .circle-joy.active { border-color: #f2c94c; background: rgba(242, 201, 76, 0.15); box-shadow: 0 0 20px rgba(242, 201, 76, 0.4); }
+
+    .circle-debt { border-color: rgba(235, 87, 87, 0.4); }
     .circle-debt.active { border-color: #eb5757; background: rgba(235, 87, 87, 0.15); box-shadow: 0 0 20px rgba(235, 87, 87, 0.4); }
+
+    .circle-transit { border-color: rgba(108, 117, 125, 0.4); }
     .circle-transit.active { border-color: #adb5bd; background: rgba(108, 117, 125, 0.2); box-shadow: 0 0 20px rgba(108, 117, 125, 0.4); }
+
+    .circle-mila { border-color: rgba(187, 134, 252, 0.4); }
     .circle-mila.active { border-color: #bb86fc; background: rgba(187, 134, 252, 0.15); box-shadow: 0 0 20px rgba(187, 134, 252, 0.4); }
+
+    .circle-bank { border-color: rgba(47, 128, 237, 0.4); }
     .circle-bank.active { border-color: #2f80ed; background: rgba(47, 128, 237, 0.15); box-shadow: 0 0 20px rgba(47, 128, 237, 0.4); }
+
+    .circle-hands { border-color: rgba(39, 174, 96, 0.4); }
     .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 20px rgba(39, 174, 96, 0.4); }
 
-    .input-card { background: #161b22; padding: 20px; border-radius: 20px; border: 1px solid #30363d; }
-    textarea { width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; }
+    /* Чистая зона ввода без лишних рамок карточек */
+    .input-card { background: transparent; padding: 0; border: none; }
+    textarea { width: 100%; padding: 12px; border: none; background: transparent; color: #fff; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; outline: none; text-align: center; }
     textarea::placeholder { color: #484f58; }
 
+    /* Панель Joy */
     #joySummaryPanel { display: none; padding: 5px 0 15px 0; }
-    .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 15px; text-align: center; font-weight: bold; text-transform: uppercase; }
+    .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 15px; text-align: center; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
     .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; padding: 0 10px; }
     .val-income { color: #238636; }
     .val-expense { color: #eb5757; }
 
+    /* Интерфейс транзита */
     #transitPanel { display: none; margin-bottom: 15px; }
     .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
-    .transit-circle { width: 85px; height: 85px; border-radius: 50%; color: #fff; border: 2px solid; display: flex; align-items: center; justify-content: center; }
-    .transit-circle select { background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold; width: 100%; text-align: center; outline: none; cursor: pointer; }
+    
+    .transit-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #0d1117; color: #fff; border: 3px solid #30363d;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .transit-circle select {
+      background: transparent; color: #fff; border: none; font-size: 13px; font-weight: bold;
+      width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      padding: 0 5px;
+    }
     .transit-circle select option { background: #161b22; color: #fff; }
 
-    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); background: rgba(235, 87, 87, 0.08); }
-    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); background: rgba(47, 128, 237, 0.08); }
-    .transit-amount { width: 100%; padding: 12px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 12px; font-size: 16px; text-align: center; box-sizing: border-box; }
+    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); }
+    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); }
 
+    .transit-amount { width: 100%; padding: 12px; background: transparent; color: #fff; border: none; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; }
+    .transit-amount::placeholder { color: #484f58; }
+
+    /* Кнопки сохранения */
     .actions { display: flex; gap: 10px; }
     button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
     button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
@@ -69,6 +100,7 @@
 <div class="container">
   <div class="header-text">joymne</div>
 
+  <!-- Пирамидка кругов -->
   <div class="pyramid">
     <div class="row">
       <div class="circle-btn circle-joy" id="btn-Joy" onclick="selectCategory('Joy')">
@@ -102,11 +134,14 @@
     </div>
   </div>
 
+  <!-- Карточка ввода -->
   <div class="input-card">
+    
     <div id="standardInput">
-      <textarea id="txInput" rows="2" placeholder="Например: 8 хлеб или ЗП 5000..."></textarea>
+      <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
     </div>
 
+    <!-- Блок транзита -->
     <div id="transitPanel">
       <div class="transit-circles-row">
         <div class="transit-circle circle-from-box">
@@ -115,14 +150,16 @@
             <option value="Мила">Мила</option>
             <option value="Банк">Банк</option>
             <option value="Долги">Долги</option>
+            <option value="Транзит">Транзит</option>
           </select>
         </div>
         <div style="font-size: 20px; color: #8b949e;">➔</div>
         <div class="transit-circle circle-to-box">
           <select id="walletTo">
-            <option value="Банк">Банк</option>
+            <option value="Транзит">Транзит</option>
             <option value="Руки">Руки</option>
             <option value="Мила">Мила</option>
+            <option value="Банк">Банк</option>
             <option value="Долги">Долги</option>
           </select>
         </div>
@@ -130,6 +167,7 @@
       <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
     </div>
 
+    <!-- Панель Joy -->
     <div id="joySummaryPanel">
       <div class="summary-title">За текущий месяц</div>
       <div class="summary-inline">

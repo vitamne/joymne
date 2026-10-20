@@ -3,364 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Учет расходов Mila D.O.O.</title>
+  <title>joymne</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #121212; margin: 0; padding: 20px; color: #e0e0e0; }
-    .container { max-width: 420px; margin: auto; background: #1e1e1e; padding: 20px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-    h2 { text-align: center; margin-bottom: 20px; color: #4dabf7; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+      background: #0b0f19; 
+      margin: 0; 
+      padding: 20px; 
+      color: #fff; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container { width: 100%; max-width: 400px; text-align: center; }
     
-    .balances-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-    .balance-card { background: #2c2c2c; padding: 12px; border-radius: 12px; border: 1px solid #333; text-align: center; }
-    .balance-card span { display: block; font-size: 12px; color: #aaa; }
-    .balance-card strong { font-size: 16px; color: #fff; }
+    .header-text { color: #8c9bae; font-size: 16px; margin-bottom: 25px; }
 
-    .categories { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 20px; }
-    .cat-row { display: flex; gap: 10px; justify-content: center; width: 100%; }
-    .cat-btn { padding: 12px 24px; border: 2px solid #444; background: #2c2c2c; color: #e0e0e0; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.2s; flex: 1; max-width: 140px; text-align: center; }
-    .cat-btn.active { background: #1a73e8; color: #fff; border-color: #1a73e8; box-shadow: 0 0 10px rgba(26,115,232,0.4); }
+    /* Пирамидка кругов */
+    .pyramid { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 25px; }
+    .row { display: flex; gap: 20px; justify-content: center; width: 100%; }
 
-    #transitFields { background: #252525; padding: 15px; border-radius: 14px; margin-bottom: 15px; display: none; border: 1px solid #444; text-align: center; }
-    .transit-circles-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 12px; align-items: center; }
-    .transit-circle-wrapper { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .circle-from { background: #d93838; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: none; outline: none; cursor: pointer; box-shadow: 0 4px 10px rgba(217,56,56,0.4); appearance: none; -webkit-appearance: none; text-align: center; text-align-last: center; }
-    .circle-to { background: #1a73e8; color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: none; outline: none; cursor: pointer; box-shadow: 0 4px 10px rgba(26,115,232,0.4); appearance: none; -webkit-appearance: none; text-align: center; text-align-last: center; }
+    /* Стили круглых кнопок */
+    .circle-btn {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: #161b22; border: 3px solid #30363d;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.2s; color: #fff; font-weight: bold;
+    }
+    .circle-btn span { font-size: 11px; color: #8b949e; margin-top: 4px; font-weight: normal; }
 
-    .input-group { margin-bottom: 15px; }
-    textarea { width: 100%; padding: 14px; border: 1px solid #444; background: #2c2c2c; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; }
+    /* Подсветка активных кругов */
+    .circle-joy { border-color: rgba(242, 201, 76, 0.4); }
+    .circle-joy.active { border-color: #f2c94c; background: rgba(242, 201, 76, 0.15); box-shadow: 0 0 20px rgba(242, 201, 76, 0.4); }
+
+    .circle-debt { border-color: rgba(235, 87, 87, 0.4); }
+    .circle-debt.active { border-color: #eb5757; background: rgba(235, 87, 87, 0.15); box-shadow: 0 0 20px rgba(235, 87, 87, 0.4); }
+
+    .circle-transit { border-color: rgba(108, 117, 125, 0.4); }
+    .circle-transit.active { border-color: #adb5bd; background: rgba(108, 117, 125, 0.2); box-shadow: 0 0 20px rgba(108, 117, 125, 0.4); }
+
+    .circle-mila { border-color: rgba(187, 134, 252, 0.4); }
+    .circle-mila.active { border-color: #bb86fc; background: rgba(187, 134, 252, 0.15); box-shadow: 0 0 20px rgba(187, 134, 252, 0.4); }
+
+    .circle-bank { border-color: rgba(47, 128, 237, 0.4); }
+    .circle-bank.active { border-color: #2f80ed; background: rgba(47, 128, 237, 0.15); box-shadow: 0 0 20px rgba(47, 128, 237, 0.4); }
+
+    .circle-hands { border-color: rgba(39, 174, 96, 0.4); }
+    .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 20px rgba(39, 174, 96, 0.4); }
+
+    /* Зона карточки */
+    .input-card { background: #161b22; padding: 20px; border-radius: 20px; border: 1px solid #30363d; }
+    textarea { width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; border-radius: 12px; font-size: 16px; box-sizing: border-box; resize: none; margin-bottom: 15px; outline: none; }
+    textarea::placeholder { color: #484f58; }
+
+    /* Панель Joy: доходы слева, расходы справа в одну строку */
+    #joySummaryPanel { display: none; padding: 5px 0 15px 0; }
+    .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: bold; padding: 0 10px; }
+    .val-income { color: #238636; }
+    .val-expense { color: #eb5757; }
+
+    /* Интерфейс транзита */
+    #transitPanel { display: none; margin-bottom: 15px; }
+    .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 15px; }
     
+    .transit-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #0d1117; color: #fff; border: 3px solid #30363d;
+      display: flex; align-items: center; justify-content: center;
+    }
+    
+    .transit-circle select {
+      background: transparent; color: #fff; border: none; font-size: 14px; font-weight: bold;
+      width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
+      appearance: none; -webkit-appearance: none; -moz-appearance: none;
+      padding: 0 5px;
+    }
+    .transit-circle select option { background: #161b22; color: #fff; }
+
+    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); }
+    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); }
+
+    .transit-amount { width: 100%; padding: 12px; background: transparent; color: #fff; border: none; font-size: 16px; text-align: center; box-sizing: border-box; outline: none; }
+    .transit-amount::placeholder { color: #484f58; }
+
+    /* Кнопки сохранения */
     .actions { display: flex; gap: 10px; }
-    button.submit-btn { flex: 2; background: #2ea44f; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-    button.photo-btn { flex: 1; background: #484f58; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
-    
-    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; z-index: 1000; border: 1px solid #555; }
+    button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+    button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+    #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #21262d; color: #fff; padding: 10px 20px; border-radius: 20px; display: none; font-size: 14px; border: 1px solid #30363d; z-index: 1000; }
 
     /* --- СТИЛИ ДЛЯ ВСПЛЫВАЮЩЕГО ОКНА (МОДАЛКИ) --- */
     #modalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
-    .modal-content { background: #1e1e1e; padding: 25px; border-radius: 20px; width: 90%; max-width: 340px; border: 1px solid #444; box-shadow: 0 10px 30px rgba(0,0,0,0.7); text-align: center; }
-    .modal-content h3 { margin-top: 0; color: #4dabf7; margin-bottom: 20px; }
-    #modalTypeBtn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 18px; font-weight: bold; color: #fff; margin-bottom: 15px; cursor: pointer; transition: 0.2s; }
-    .modal-field { margin-bottom: 15px; text-align: left; }
-    .modal-field label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; padding-left: 5px; }
-    .modal-field input, .modal-field select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #444; background: #2c2c2c; color: #fff; font-size: 18px; box-sizing: border-box; appearance: none; -webkit-appearance: none; }
-    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-    .modal-btn-cancel { flex: 1; background: #484f58; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-    .modal-btn-confirm { flex: 2; background: #2ea44f; color: #fff; border: none; padding: 14px; border-radius: 12px; font-weight: bold; cursor: pointer; }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <h2>Mila D.O.O. Учет</h2>
-
-  <div class="balances-grid">
-    <div class="balance-card"><span>Мила</span><strong id="balMila">...</strong></div>
-    <div class="balance-card"><span>Банк</span><strong id="balBank">...</strong></div>
-    <div class="balance-card"><span>Руки</span><strong id="balHands">...</strong></div>
-    <div class="balance-card"><span>Долги</span><strong id="balDebts">...</strong></div>
-  </div>
-
-  <div class="categories">
-    <div class="cat-row">
-      <button class="cat-btn active" onclick="selectCategory('Мила')">Мила</button>
-      <button class="cat-btn" onclick="selectCategory('Банк')">Банк</button>
-    </div>
-    <div class="cat-row">
-      <button class="cat-btn" onclick="selectCategory('Руки')">Руки</button>
-      <button class="cat-btn" onclick="selectCategory('Долги')">Долги</button>
-    </div>
-    <div class="cat-row">
-      <button class="cat-btn" onclick="selectCategory('Транзит')">Транзит</button>
-    </div>
-  </div>
-
-  <div id="standardInputGroup">
-    <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
-  </div>
-
-  <div id="transitFields">
-    <div class="transit-circles-container">
-      <div class="transit-circle-wrapper">
-        <select id="walletFrom" class="circle-from">
-          <option value="Мила">Мила</option>
-          <option value="Банк">Банк</option>
-          <option value="Руки">Руки</option>
-        </select>
-      </div>
-      <div style="font-size: 24px; color: #888; font-weight: bold;">➔</div>
-      <div class="transit-circle-wrapper">
-        <select id="walletTo" class="circle-to">
-          <option value="">Копилка</option>
-          <option value="Мила">Мила</option>
-          <option value="Банк">Банк</option>
-          <option value="Руки">Руки</option>
-        </select>
-      </div>
-    </div>
-    <input type="text" id="transitAmount" style="width:100%; padding:14px; border:1px solid #444; background:#2c2c2c; color:#fff; border-radius:12px; font-size:16px; text-align:center; box-sizing:border-box;" placeholder="Сумма перевода (€)">
-  </div>
-
-  <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
-
-  <div class="actions" id="actionButtons">
-    <button class="submit-btn" onclick="requestParseTransaction()">Сохранить</button>
-    <button class="photo-btn" id="photoBtn" onclick="document.getElementById('photoInput').click()">📷 Чек</button>
-  </div>
-</div>
-
-<!-- ================= ВСПЛЫВАЮЩЕЕ ОКНО (МОДАЛКА) ================= -->
-<div id="modalOverlay">
-  <div class="modal-content">
-    <h3>Проверка данных</h3>
-    
-    <button id="modalTypeBtn" onclick="toggleModalType()">Расход</button>
-    
-    <div class="modal-field">
-      <label>Сумма (€):</label>
-      <input type="number" id="modalAmount" step="0.01">
-    </div>
-
-    <div class="modal-field">
-      <label>Вид транзакции:</label>
-      <select id="modalCategory"></select>
-    </div>
-
-    <div class="modal-field">
-      <label>Описание (или Фирма):</label>
-      <input type="text" id="modalDescription">
-    </div>
-
-    <div class="modal-actions">
-      <button class="modal-btn-cancel" onclick="closeModal()">Отмена</button>
-      <button class="modal-btn-confirm" onclick="confirmTransaction()">Подтвердить</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast">Сохранение...</div>
-
-<script>
-  const APPS_SCRIPT_URL = "ВАШ_WEB_APP_URL_ЗДЕСЬ";
-  
-  let activeCategory = "Мила";
-  let isSubmitting = false;
-  
-  // Глобальные переменные для модалки
-  let globalCategories = [];
-  let pendingTxData = {};
-  let currentModalType = "expense";
-
-  window.onload = function() {
-    loadBalances();
-    if (sessionStorage.getItem("joymne_toast")) {
-      showToast(sessionStorage.getItem("joymne_toast"));
-      sessionStorage.removeItem("joymne_toast");
-    }
-  };
-
-  function selectCategory(category) {
-    activeCategory = category;
-    document.querySelectorAll('.cat-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.innerText === category);
-    });
-
-    if (category === "Транзит") {
-      document.getElementById("standardInputGroup").style.display = "none";
-      document.getElementById("transitFields").style.display = "block";
-      document.getElementById("photoBtn").style.display = "none"; 
-    } else {
-      document.getElementById("standardInputGroup").style.display = "block";
-      document.getElementById("transitFields").style.display = "none";
-      document.getElementById("photoBtn").style.display = "block"; 
-    }
-  }
-
-  async function loadBalances() {
-    try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getBalances`);
-      const data = await res.json();
-      if (data.status === "success") {
-        document.getElementById("balMila").innerText = (data.balances["Мила"] || 0).toFixed(2) + " €";
-        document.getElementById("balBank").innerText = (data.balances["Банк"] || 0).toFixed(2) + " €";
-        document.getElementById("balHands").innerText = (data.balances["Руки"] || 0).toFixed(2) + " €";
-        document.getElementById("balDebts").innerText = (data.balances["Долги"] || 0).toFixed(2) + " €";
-        
-        if (data.categories) {
-          globalCategories = data.categories; // Запоминаем виды расходов
-        }
-      }
-    } catch (e) { console.error(e); }
-  }
-
-  // --- ШАГ 1: ОТПРАВЛЯЕМ ДАННЫЕ НА АНАЛИЗ (ПО КНОПКЕ "СОХРАНИТЬ" ИЛИ ПОСЛЕ ФОТО) ---
-  async function requestParseTransaction(photoBase64 = null) {
-    if (isSubmitting) return;
-
-    let finalDescription = "";
-    if (activeCategory === "Транзит") {
-      const fromW = document.getElementById("walletFrom").value;
-      const toW = document.getElementById("walletTo").value;
-      const amountVal = document.getElementById("transitAmount").value.trim();
-      if (!amountVal) { alert("Введите сумму перевода!"); return; }
-      finalDescription = toW ? `Перевод из ${fromW} в ${toW} ${amountVal}` : `Перевод из ${fromW} в Копилка (Сбережения) ${amountVal}`;
-    } else {
-      finalDescription = document.getElementById("txInput").value.trim();
-      if (!finalDescription && !photoBase64) { alert("Введите описание или сумму!"); return; }
-    }
-
-    isSubmitting = true;
-    showToast(photoBase64 ? "Распознавание чека..." : "Анализ данных...");
-
-    // Сохраняем исходные данные до подтверждения
-    pendingTxData = { category: activeCategory, text: finalDescription, photo: photoBase64 };
-
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ actionType: "parse", category: activeCategory, text: finalDescription, photo: photoBase64 }),
-        redirect: "follow"
-      });
-
-      const data = await response.json();
-      isSubmitting = false;
-      
-      if (data.status === "success") {
-        openModal(data.parsed); // Открываем окно предпросмотра!
-      } else {
-        alert("Ошибка: " + data.message);
-      }
-    } catch (err) {
-      alert("Ошибка сети");
-      isSubmitting = false;
-    }
-  }
-
-  // --- ШАГ 2: ОТКРЫТИЕ И УПРАВЛЕНИЕ МОДАЛКОЙ ---
-  function openModal(parsedData) {
-    currentModalType = parsedData.type;
-    
-    document.getElementById("modalAmount").value = parsedData.amount;
-    document.getElementById("modalDescription").value = parsedData.description;
-    
-    // Заполняем выпадающий список видов (Категорий)
-    const selectCat = document.getElementById("modalCategory");
-    selectCat.innerHTML = "";
-    
-    let cats = [...globalCategories];
-    if (parsedData.view && !cats.includes(parsedData.view)) cats.push(parsedData.view);
-    
-    cats.forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c;
-      opt.innerText = c;
-      if (c === parsedData.view) opt.selected = true;
-      selectCat.appendChild(opt);
-    });
-
-    updateModalTypeBtn();
-    document.getElementById("modalOverlay").style.display = "flex";
-  }
-
-  function updateModalTypeBtn() {
-    const btn = document.getElementById("modalTypeBtn");
-    if (pendingTxData.category === "Транзит") {
-      btn.innerText = "Транзит (Перевод)";
-      btn.style.background = "#4dabf7";
-      btn.disabled = true; 
-    } else {
-      btn.disabled = false;
-      if (currentModalType === "income") {
-        btn.innerText = "Приход";
-        btn.style.background = "#2ea44f"; // Зеленый
-      } else {
-        btn.innerText = "Расход";
-        btn.style.background = "#d93838"; // Красный
-      }
-    }
-  }
-
-  function toggleModalType() {
-    if (pendingTxData.category === "Транзит") return;
-    currentModalType = currentModalType === "expense" ? "income" : "expense";
-    updateModalTypeBtn();
-  }
-
-  function closeModal() {
-    document.getElementById("modalOverlay").style.display = "none";
-    document.getElementById("txInput").value = "";
-    document.getElementById("transitAmount").value = "";
-  }
-
-  // --- ШАГ 3: ОКОНЧАТЕЛЬНОЕ ПОДТВЕРЖДЕНИЕ И ЗАПИСЬ ---
-  async function confirmTransaction() {
-    document.getElementById("modalOverlay").style.display = "none";
-    showToast("Сохранение...");
-    isSubmitting = true;
-
-    const confirmedData = {
-      type: pendingTxData.category === "Транзит" ? "transfer" : currentModalType,
-      amount: parseFloat(document.getElementById("modalAmount").value),
-      view: document.getElementById("modalCategory").value,
-      description: document.getElementById("modalDescription").value
-    };
-
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ 
-          actionType: "save_confirmed", 
-          category: pendingTxData.category, 
-          text: pendingTxData.text, 
-          photo: pendingTxData.photo,
-          confirmed: confirmedData
-        }),
-        redirect: "follow"
-      });
-
-      const data = await response.json();
-      if (data.status === "success") {
-        sessionStorage.setItem("joymne_toast", "✓ Успешно сохранено!");
-        window.location.replace(window.location.pathname + "?t=" + Date.now());
-      } else {
-        alert("Ошибка сервера: " + data.message);
-        isSubmitting = false;
-      }
-    } catch (err) {
-      alert("Ошибка сети при сохранении");
-      isSubmitting = false;
-    }
-  }
-
-  // --- СЖАТИЕ ФОТО ---
-  function handlePhoto(input) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width, height = img.height;
-          if (width > height) { if (width > 1200) { height *= 1200 / width; width = 1200; } } 
-          else { if (height > 1200) { width *= 1200 / height; height = 1200; } }
-          canvas.width = width; canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          
-          requestParseTransaction(canvas.toDataURL('image/jpeg', 0.6)); 
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.innerText = msg;
-    t.style.display = "block";
-    setTimeout(() => { t.style.display = "none"; }, 3000);
-  }
-</script>
-
-</body>
-</html>
+    .modal-content { background: #161b22; padding: 25px; border-radius: 20px; width: 90%; max-width: 340px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.7); text-align: center; }
+    .modal-content h3 { margin-top: 0; color: #8c9bae; margin-bottom: 20px; }
+    #modalTypeBtn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-size: 18px; font-weight: bold; color:

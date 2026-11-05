@@ -522,7 +522,8 @@
         img.onload = function() {
           const canvas = document.createElement('canvas');
           let width = img.width, height = img.height;
-          const maxDim = 1800; // Высокое разрешение для плотных фискальных QR
+          // Оптимальный размер: 1200px без перегрузки WebKit Safari
+          const maxDim = 1200;
           if (width > height) {
             if (width > maxDim) { height = Math.round(height * maxDim / width); width = maxDim; }
           } else {
@@ -536,7 +537,7 @@
           let qrDecoded = null;
           if (typeof jsQR !== "undefined") {
             try {
-              // 1. Сканируем нижнюю половину чека, где расположен QR
+              // 1. Проверяем нижнюю половину чека
               const halfY = Math.floor(height * 0.45);
               const halfH = height - halfY;
               const bottomData = ctx.getImageData(0, halfY, width, halfH);
@@ -546,7 +547,7 @@
               }
             } catch(err) {}
 
-            // 2. Если внизу не найден, проверяем полный кадр
+            // 2. Если внизу не нашли, сканируем весь кадр
             if (!qrDecoded) {
               try {
                 const fullData = ctx.getImageData(0, 0, width, height);
@@ -562,9 +563,16 @@
           pendingTxData = { category: activeCategory, text: "", photo: photoBase64 };
 
           if (qrDecoded) {
-            // Извлечение суммы по фискальным ссылкам Черногории (prc=18.07, price=, tot=, amount=, iznos=, i=)
-            const match = qrDecoded.match(/[?&](?:prc|price|tot|total|amount|iznos|i)=([0-9]+[.,][0-9]{2})/i);
-            const amt = match ? parseFloat(match[1].replace(',', '.')) : 0;
+            // Черногорские фискальные ссылки: ?prc=18.07, &price=, &tot=, &i=, &amount=
+            let amt = 0;
+            const match = qrDecoded.match(/[?&](?:prc|price|tot|total|amount|iznos|i|cena)=([0-9]+[.,][0-9]{2})/i);
+            if (match) {
+              amt = parseFloat(match[1].replace(',', '.'));
+            } else {
+              // Поиск любого десятичного числа в URL
+              const urlNums = qrDecoded.match(/=([0-9]+[.,][0-9]{2})/);
+              if (urlNums) amt = parseFloat(urlNums[1].replace(',', '.'));
+            }
             
             let firm = "Чек по QR";
             let cat = "Продукты";
@@ -639,7 +647,9 @@
 
   function openModal(parsedData) {
     currentModalType = parsedData.type || "expense";
-    document.getElementById("modalAmount").value = (parsedData.amount && parsedData.amount > 0) ? parsedData.amount : "";
+    // Если сумма передана — сразу заполняем числом
+    const amt = parseFloat(parsedData.amount);
+    document.getElementById("modalAmount").value = (!isNaN(amt) && amt > 0) ? amt : "";
     document.getElementById("modalDescription").value = parsedData.description || "";
     
     const selectCat = document.getElementById("modalCategory");
@@ -692,7 +702,7 @@
 
   async function confirmTransaction() {
     const enteredAmount = parseFloat(document.getElementById("modalAmount").value);
-    if (!enteredAmount || isNaN(enteredAmount)) {
+    if (!enteredAmount || isNaN(enteredAmount) || enteredAmount <= 0) {
       alert("Пожалуйста, укажите сумму покупки!");
       return;
     }

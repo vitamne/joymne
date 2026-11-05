@@ -4,285 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>joymne</title>
-  <!-- Моментальный сканер QR на клиенте без ожидания серверов -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
     body { 
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
-      background: #0b0f19; 
-      margin: 0; 
-      padding: 24px 16px; 
-      color: #fff; 
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
+      background: #0b0f19; margin: 0; padding: 24px 16px; color: #fff; 
+      display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden;
     }
+    .container { width: 100%; max-width: 390px; display: flex; flex-direction: column; align-items: center; }
+    .header-text { color: #8c9bae; font-size: 15px; margin-bottom: 24px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; text-align: center; }
 
-    .container { 
-      width: 100%; 
-      max-width: 390px; 
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .header-text { 
-      color: #8c9bae; 
-      font-size: 15px; 
-      margin-bottom: 24px; 
-      font-weight: 700; 
-      letter-spacing: 1.5px; 
-      text-transform: uppercase; 
-      text-align: center;
-    }
-
-    /* Пирамидка неоновых кругов */
-    .pyramid { 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      gap: 16px; 
-      margin-bottom: 24px; 
-      width: 100%;
-    }
-
-    .row { 
-      display: flex; 
-      gap: 16px; 
-      justify-content: center; 
-      align-items: center;
-      width: 100%; 
-    }
+    .pyramid { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 24px; width: 100%; }
+    .row { display: flex; gap: 16px; justify-content: center; align-items: center; width: 100%; }
 
     .circle-btn {
-      width: 92px; 
-      height: 92px; 
-      border-radius: 50%;
-      background: #161b22; 
-      border: 2.5px solid #30363d;
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center;
-      cursor: pointer; 
-      transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
-      color: #fff; 
-      font-weight: 700;
-      font-size: 14px;
-      flex-shrink: 0;
+      width: 92px; height: 92px; border-radius: 50%; background: #161b22; border: 2.5px solid #30363d;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease; 
+      color: #fff; font-weight: 700; font-size: 14px; flex-shrink: 0;
     }
+    .circle-btn:active { transform: scale(0.94); }
+    .circle-btn span { font-size: 11px; color: #8b949e; margin-top: 4px; font-weight: 500; }
 
-    .circle-btn:active { 
-      transform: scale(0.94); 
-    }
-
-    .circle-btn span { 
-      font-size: 11px; 
-      color: #8b949e; 
-      margin-top: 4px; 
-      font-weight: 500; 
-    }
-
-    /* Подсветка неоновых кругов */
     .circle-joy { border-color: rgba(242, 201, 76, 0.45); }
-    .circle-joy.active { 
-      border-color: #f2c94c; 
-      background: rgba(242, 201, 76, 0.15); 
-      box-shadow: 0 0 22px rgba(242, 201, 76, 0.4); 
-    }
+    .circle-joy.active { border-color: #f2c94c; background: rgba(242, 201, 76, 0.15); box-shadow: 0 0 22px rgba(242, 201, 76, 0.4); }
 
     .circle-debt { border-color: rgba(235, 87, 87, 0.45); }
-    .circle-debt.active { 
-      border-color: #eb5757; 
-      background: rgba(235, 87, 87, 0.15); 
-      box-shadow: 0 0 22px rgba(235, 87, 87, 0.4); 
-    }
+    .circle-debt.active { border-color: #eb5757; background: rgba(235, 87, 87, 0.15); box-shadow: 0 0 22px rgba(235, 87, 87, 0.4); }
 
     .circle-transit { border-color: rgba(108, 117, 125, 0.45); }
-    .circle-transit.active { 
-      border-color: #adb5bd; 
-      background: rgba(108, 117, 125, 0.2); 
-      box-shadow: 0 0 22px rgba(108, 117, 125, 0.4); 
-    }
+    .circle-transit.active { border-color: #adb5bd; background: rgba(108, 117, 125, 0.2); box-shadow: 0 0 22px rgba(108, 117, 125, 0.4); }
 
     .circle-mila { border-color: rgba(187, 134, 252, 0.45); }
-    .circle-mila.active { 
-      border-color: #bb86fc; 
-      background: rgba(187, 134, 252, 0.15); 
-      box-shadow: 0 0 22px rgba(187, 134, 252, 0.4); 
-    }
+    .circle-mila.active { border-color: #bb86fc; background: rgba(187, 134, 252, 0.15); box-shadow: 0 0 22px rgba(187, 134, 252, 0.4); }
 
     .circle-bank { border-color: rgba(47, 128, 237, 0.45); }
-    .circle-bank.active { 
-      border-color: #2f80ed; 
-      background: rgba(47, 128, 237, 0.15); 
-      box-shadow: 0 0 22px rgba(47, 128, 237, 0.4); 
-    }
+    .circle-bank.active { border-color: #2f80ed; background: rgba(47, 128, 237, 0.15); box-shadow: 0 0 22px rgba(47, 128, 237, 0.4); }
 
     .circle-hands { border-color: rgba(39, 174, 96, 0.45); }
-    .circle-hands.active { 
-      border-color: #27ae60; 
-      background: rgba(39, 174, 96, 0.15); 
-      box-shadow: 0 0 22px rgba(39, 174, 96, 0.4); 
-    }
+    .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 22px rgba(39, 174, 96, 0.4); }
 
-    /* Карточка ввода под пирамидой */
-    .input-card { 
-      background: #161b22; 
-      padding: 18px; 
-      border-radius: 20px; 
-      border: 1px solid #30363d; 
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-      width: 100%;
-    }
-
+    .input-card { background: #161b22; padding: 18px; border-radius: 20px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; }
     textarea { 
-      width: 100%; 
-      padding: 12px; 
-      border: 1px solid #30363d; 
-      background: #0d1117; 
-      color: #fff; 
-      border-radius: 12px; 
-      font-size: 15px; 
-      box-sizing: border-box; 
-      resize: none; 
-      margin-bottom: 14px; 
-      user-select: text; 
-      -webkit-user-select: text; 
-      outline: none;
+      width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; 
+      border-radius: 12px; font-size: 15px; box-sizing: border-box; resize: none; margin-bottom: 14px; 
+      user-select: text; -webkit-user-select: text; outline: none;
     }
     textarea::placeholder { color: #484f58; }
 
-    /* Блок Транзита */
     #transitPanel { display: none; margin-bottom: 15px; }
     .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 12px; }
-    
     .transit-circle {
-      width: 82px; 
-      height: 82px; 
-      border-radius: 50%; 
-      background: #0d1117; 
-      color: #fff; 
-      border: 2px solid; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
+      width: 82px; height: 82px; border-radius: 50%; background: #0d1117; color: #fff; 
+      border: 2px solid; display: flex; align-items: center; justify-content: center;
     }
-    
     .transit-circle select {
-      background: transparent; 
-      color: #fff; 
-      border: none; 
-      font-size: 13px; 
-      font-weight: 700;
-      width: 100%; 
-      text-align: center; 
-      text-align-last: center; 
-      outline: none; 
-      cursor: pointer;
+      background: transparent; color: #fff; border: none; font-size: 13px; font-weight: 700;
+      width: 100%; text-align: center; text-align-last: center; outline: none; cursor: pointer;
     }
     .transit-circle select option { background: #161b22; color: #fff; }
+    .circle-from-box { border-color: rgba(235, 87, 87, 0.6); background: rgba(235, 87, 87, 0.08); box-shadow: 0 0 12px rgba(235, 87, 87, 0.15); }
+    .circle-to-box { border-color: rgba(47, 128, 237, 0.6); background: rgba(47, 128, 237, 0.08); box-shadow: 0 0 12px rgba(47, 128, 237, 0.15); }
+    .transit-amount { width: 100%; padding: 12px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 12px; font-size: 16px; text-align: center; box-sizing: border-box; }
 
-    .circle-from-box { 
-      border-color: rgba(235, 87, 87, 0.6); 
-      background: rgba(235, 87, 87, 0.08); 
-      box-shadow: 0 0 12px rgba(235, 87, 87, 0.15); 
-    }
-    .circle-to-box { 
-      border-color: rgba(47, 128, 237, 0.6); 
-      background: rgba(47, 128, 237, 0.08); 
-      box-shadow: 0 0 12px rgba(47, 128, 237, 0.15); 
-    }
-
-    .transit-amount { 
-      width: 100%; 
-      padding: 12px; 
-      background: #0d1117; 
-      color: #fff; 
-      border: 1px solid #30363d; 
-      border-radius: 12px; 
-      font-size: 16px; 
-      text-align: center; 
-      box-sizing: border-box; 
-    }
-
-    /* Панель Joy: доходы слева, расходы справа в одну строку */
     #joySummaryPanel { display: none; padding: 6px 0 16px 0; }
     .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 14px; text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 700; padding: 0 10px; }
     .val-income { color: #238636; }
     .val-expense { color: #eb5757; }
 
-    /* Кнопки действий */
     .actions { display: flex; gap: 10px; }
-    button.submit-btn { 
-      flex: 2; 
-      background: #238636; 
-      color: white; 
-      border: none; 
-      padding: 13px; 
-      border-radius: 12px; 
-      font-size: 15px; 
-      font-weight: 700; 
-      cursor: pointer; 
-    }
-    button.photo-btn { 
-      flex: 1; 
-      background: #30363d; 
-      color: white; 
-      border: none; 
-      padding: 13px; 
-      border-radius: 12px; 
-      font-size: 15px; 
-      font-weight: 700; 
-      cursor: pointer; 
-    }
+    button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
+    button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; }
 
-    /* Модальное окно подтверждения */
-    #modalOverlay { 
-      display: none; 
-      position: fixed; 
-      inset: 0; 
-      background: rgba(0,0,0,0.85); 
-      z-index: 9999; 
-      justify-content: center; 
-      align-items: center; 
-    }
-    .modal-content { 
-      background: #161b22; 
-      padding: 22px; 
-      border-radius: 20px; 
-      width: 90%; 
-      max-width: 330px; 
-      border: 1px solid #30363d; 
-      text-align: center; 
-    }
+    #modalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
+    .modal-content { background: #161b22; padding: 22px; border-radius: 20px; width: 90%; max-width: 330px; border: 1px solid #30363d; text-align: center; }
     .modal-content h3 { margin-top: 0; color: #3b82f6; margin-bottom: 16px; font-size: 1.1rem; }
     #modalTypeBtn { width: 100%; padding: 12px; border-radius: 12px; border: none; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px; cursor: pointer; }
     .modal-field { margin-bottom: 12px; text-align: left; }
     .modal-field label { font-size: 12px; color: #8b949e; display: block; margin-bottom: 4px; }
-    .modal-field input, .modal-field select { 
-      width: 100%; 
-      padding: 11px; 
-      border-radius: 10px; 
-      border: 1px solid #30363d; 
-      background: #0d1117; 
-      color: #fff; 
-      font-size: 16px; 
-      box-sizing: border-box; 
-    }
+    .modal-field input, .modal-field select { width: 100%; padding: 11px; border-radius: 10px; border: 1px solid #30363d; background: #0d1117; color: #fff; font-size: 16px; box-sizing: border-box; }
     .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
     .modal-btn-cancel { flex: 1; background: #30363d; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
     .modal-btn-confirm { flex: 2; background: #238636; color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; }
@@ -299,16 +101,13 @@
 <div class="container">
   <div class="header-text">joymne</div>
 
-  <!-- Пирамидка кругов -->
   <div class="pyramid">
-    <!-- Вершина: Joy -->
     <div class="row">
       <div class="circle-btn circle-joy" id="btn-Joy" onclick="selectCategory('Joy')">
         Joy
         <span id="balJoy">---</span>
       </div>
     </div>
-    <!-- Второй ряд: Долги и Транзит -->
     <div class="row">
       <div class="circle-btn circle-debt" id="btn-Долги" onclick="selectCategory('Долги')">
         Долги
@@ -319,7 +118,6 @@
         <span id="balTransit">---</span>
       </div>
     </div>
-    <!-- Нижний ряд: Мила, Банк, Руки -->
     <div class="row">
       <div class="circle-btn circle-mila" id="btn-Мила" onclick="selectCategory('Мила')">
         Мила
@@ -336,13 +134,11 @@
     </div>
   </div>
 
-  <!-- Карточка ввода -->
   <div class="input-card">
     <div id="standardInput">
       <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
     </div>
 
-    <!-- Блок транзита -->
     <div id="transitPanel">
       <div class="transit-circles-row">
         <div class="transit-circle circle-from-box">
@@ -365,7 +161,6 @@
       <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
     </div>
 
-    <!-- Панель Joy: компактные итоги месяца -->
     <div id="joySummaryPanel">
       <div class="summary-title">За текущий месяц</div>
       <div class="summary-inline">
@@ -383,7 +178,6 @@
   </div>
 </div>
 
-<!-- Модальное окно проверки -->
 <div id="modalOverlay">
   <div class="modal-content">
     <h3>Проверка данных</h3>
@@ -514,17 +308,16 @@
     } catch (e) {}
   }
 
-  // Мгновенное чтение QR фискального чека на телефоне (0.1 сек)
   function handlePhoto(input) {
     if (input.files && input.files[0]) {
-      showToast("Сканирование QR...");
+      showToast("Распознавание чека...");
       const reader = new FileReader();
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
           let width = img.width, height = img.height;
-          const maxDim = 1200;
+          const maxDim = 1500; // Высокая четкость для QR
           if (width > height) {
             if (width > maxDim) { height *= maxDim / width; width = maxDim; }
           } else {
@@ -539,16 +332,17 @@
           try {
             const imgData = ctx.getImageData(0, 0, width, height);
             if (typeof jsQR !== "undefined") {
-              const code = jsQR(imgData.data, width, height, { inversionAttempts: "dontInvert" });
+              const code = jsQR(imgData.data, width, height, { inversionAttempts: "attemptBoth" });
               if (code && code.data) qrDecoded = code.data;
             }
           } catch(err) {}
 
-          const photoBase64 = canvas.toDataURL('image/jpeg', 0.65);
+          const photoBase64 = canvas.toDataURL('image/jpeg', 0.8);
           pendingTxData = { category: activeCategory, text: "", photo: photoBase64 };
 
           if (qrDecoded) {
-            const match = qrDecoded.match(/[?&](?:prc|price|tot|amount|iznos)=([0-9]+[.,][0-9]{2})/i);
+            // Разбор фискальных параметров Черногории: ?prc=14.50, &price=, &tot=, &i=
+            const match = qrDecoded.match(/[?&](?:prc|price|tot|total|amount|iznos|i)=([0-9]+[.,][0-9]{2})/i);
             const amt = match ? parseFloat(match[1].replace(',', '.')) : 0;
             
             let firm = "Чек по QR";
@@ -560,10 +354,14 @@
             else if (low.includes("franca")) { firm = "Franca"; cat = "Продукты"; }
             else if (low.includes("apoteka") || low.includes("benu")) { firm = "Apoteka"; cat = "Здоровье"; }
 
-            openModal({ type: "expense", amount: amt, view: cat, description: firm });
-          } else {
-            requestParseTransaction(photoBase64);
+            if (amt > 0) {
+              openModal({ type: "expense", amount: amt, view: cat, description: firm });
+              return;
+            }
           }
+          
+          // Если QR не распознан или сумма не найдена — отправляем на сервер для OCR-разбора
+          requestParseTransaction(photoBase64);
         };
         img.src = e.target.result;
       };
@@ -587,12 +385,12 @@
     }
 
     isSubmitting = true;
-    showToast(photoBase64 ? "Чтение чека..." : "Анализ данных...");
+    showToast(photoBase64 ? "Чтение текста чека..." : "Анализ данных...");
     pendingTxData = { category: activeCategory, text: finalDescription, photo: photoBase64 };
 
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 12000);
+      const timeoutId = setTimeout(() => controller.abort(), 14000);
 
       const response = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
@@ -604,28 +402,23 @@
       clearTimeout(timeoutId);
 
       const raw = await response.text();
-      let data;
-      try {
-        data = JSON.parse(raw);
-      } catch(e) {
-        data = { status: "success", parsed: { type: "expense", amount: 0, view: "Продукты", description: "Покупка по чеку" } };
-      }
-
+      let data = JSON.parse(raw);
       isSubmitting = false;
+
       if (data && data.parsed) {
         openModal(data.parsed);
       } else {
-        openModal({ type: "expense", amount: 0, view: "Продукты", description: "Покупка" });
+        openModal({ type: "expense", amount: "", view: "Продукты", description: "Покупка по чеку" });
       }
     } catch (err) {
       isSubmitting = false;
-      openModal({ type: "expense", amount: 0, view: "Продукты", description: "Чек (введите сумму)" });
+      openModal({ type: "expense", amount: "", view: "Продукты", description: "Чек (введите сумму)" });
     }
   }
 
   function openModal(parsedData) {
     currentModalType = parsedData.type || "expense";
-    document.getElementById("modalAmount").value = parsedData.amount || "";
+    document.getElementById("modalAmount").value = (parsedData.amount && parsedData.amount > 0) ? parsedData.amount : "";
     document.getElementById("modalDescription").value = parsedData.description || "";
     
     const selectCat = document.getElementById("modalCategory");
@@ -677,13 +470,19 @@
   }
 
   async function confirmTransaction() {
+    const enteredAmount = parseFloat(document.getElementById("modalAmount").value);
+    if (!enteredAmount || isNaN(enteredAmount)) {
+      alert("Пожалуйста, укажите сумму покупки!");
+      return;
+    }
+
     document.getElementById("modalOverlay").style.display = "none";
     showToast("Сохранение...");
     isSubmitting = true;
 
     const confirmedData = {
       type: pendingTxData.category === "Транзит" ? "transfer" : currentModalType,
-      amount: parseFloat(document.getElementById("modalAmount").value) || 0,
+      amount: enteredAmount,
       view: document.getElementById("modalCategory").value,
       description: document.getElementById("modalDescription").value
     };

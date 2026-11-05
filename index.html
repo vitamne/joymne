@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>joymne</title>
-  <!-- Моментальный сканер QR на клиенте -->
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <style>
     * {
@@ -218,7 +217,7 @@
       box-sizing: border-box; 
     }
 
-    /* Панель Joy: итоги месяца */
+    /* Панель Joy: компактные итоги за месяц */
     #joySummaryPanel { display: none; padding: 6px 0 16px 0; }
     .summary-title { font-size: 13px; color: #8b949e; margin-bottom: 14px; text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
     .summary-inline { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 700; padding: 0 10px; }
@@ -710,7 +709,7 @@
     };
 
     try {
-      await fetch(APPS_SCRIPT_URL, {
+      const response = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ 
@@ -723,11 +722,20 @@
         redirect: "follow"
       });
 
-      sessionStorage.setItem("joymne_toast", "✓ Сохранено успешно!");
-      window.location.replace(window.location.pathname + "?t=" + Date.now());
+      const raw = await response.text();
+      let resJson;
+      try { resJson = JSON.parse(raw); } catch(e) {}
+
+      if (resJson && resJson.status === "success") {
+        sessionStorage.setItem("joymne_toast", "✓ Сохранено успешно!");
+        window.location.replace(window.location.pathname + "?t=" + Date.now());
+      } else {
+        alert("Ошибка сервера при сохранении: " + (resJson ? resJson.message : raw));
+        isSubmitting = false;
+      }
     } catch (err) {
-      sessionStorage.setItem("joymne_toast", "✓ Сохранено!");
-      window.location.replace(window.location.pathname + "?t=" + Date.now());
+      alert("Ошибка сети при отправке данных: " + err.toString());
+      isSubmitting = false;
     }
   }
 

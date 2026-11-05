@@ -4,29 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>joymne</title>
+  <!-- Легковесный сканер QR прямо в браузере (работает за 0.1 сек) -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none; }
     body { 
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; 
-      background: #0b0f19; 
-      margin: 0; 
-      padding: 20px 16px; 
-      color: #fff; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
+      background: #0b0f19; margin: 0; padding: 20px 16px; color: #fff; 
+      display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden;
     }
-
     .container { width: 100%; max-width: 400px; text-align: center; }
     .header-text { color: #8c9bae; font-size: 15px; margin-bottom: 20px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
 
@@ -61,7 +47,6 @@
     .circle-hands { border-color: rgba(39, 174, 96, 0.4); }
     .circle-hands.active { border-color: #27ae60; background: rgba(39, 174, 96, 0.15); box-shadow: 0 0 20px rgba(39, 174, 96, 0.4); }
 
-    /* Поле ввода */
     .input-card { background: #161b22; padding: 18px; border-radius: 20px; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
     textarea { 
       width: 100%; padding: 12px; border: 1px solid #30363d; background: #0d1117; color: #fff; 
@@ -70,7 +55,6 @@
     }
     textarea::placeholder { color: #484f58; }
 
-    /* Транзит */
     #transitPanel { display: none; margin-bottom: 15px; }
     .transit-circles-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 12px; }
     .transit-circle {
@@ -86,7 +70,6 @@
     .circle-to-box { border-color: #2f80ed; box-shadow: 0 0 10px rgba(47, 128, 237, 0.3); }
     .transit-amount { width: 100%; padding: 12px; background: #0d1117; color: #fff; border: 1px solid #30363d; border-radius: 12px; font-size: 16px; text-align: center; box-sizing: border-box; }
 
-    /* Joy сводка */
     #joySummaryPanel { display: none; text-align: left; padding: 5px; margin-bottom: 15px; }
     .summary-title { font-size: 12px; color: #8b949e; margin-bottom: 8px; text-align: center; font-weight: bold; text-transform: uppercase; }
     .summary-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #21262d; font-size: 14px; }
@@ -94,12 +77,11 @@
     .summary-label { color: #8b949e; }
     .summary-value { font-weight: bold; }
 
-    /* Кнопки действий */
     .actions { display: flex; gap: 10px; }
     button.submit-btn { flex: 2; background: #238636; color: white; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; }
     button.photo-btn { flex: 1; background: #30363d; color: white; border: none; padding: 13px; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; }
 
-    /* Модальное окно подтверждения */
+    /* Окно проверки */
     #modalOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
     .modal-content { background: #161b22; padding: 22px; border-radius: 20px; width: 90%; max-width: 330px; border: 1px solid #30363d; text-align: center; }
     .modal-content h3 { margin-top: 0; color: #3b82f6; margin-bottom: 16px; font-size: 1.1rem; }
@@ -123,7 +105,6 @@
 <div class="container">
   <div class="header-text">joymne</div>
 
-  <!-- Пирамидка кругов -->
   <div class="pyramid">
     <div class="row">
       <div class="circle-btn circle-joy" id="btn-Joy" onclick="selectCategory('Joy')">
@@ -132,358 +113,4 @@
       </div>
     </div>
     <div class="row">
-      <div class="circle-btn circle-debt" id="btn-Долги" onclick="selectCategory('Долги')">
-        Долги
-        <span id="balDebts">---</span>
-      </div>
-      <div class="circle-btn circle-transit" id="btn-Транзит" onclick="selectCategory('Транзит')">
-        Транзит
-        <span id="balTransit">---</span>
-      </div>
-    </div>
-    <div class="row">
-      <div class="circle-btn circle-mila" id="btn-Мила" onclick="selectCategory('Мила')">
-        Мила
-        <span id="balMila">---</span>
-      </div>
-      <div class="circle-btn circle-bank" id="btn-Банк" onclick="selectCategory('Банк')">
-        Банк
-        <span id="balBank">---</span>
-      </div>
-      <div class="circle-btn circle-hands active" id="btn-Руки" onclick="selectCategory('Руки')">
-        Руки
-        <span id="balHands">---</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Карточка ввода -->
-  <div class="input-card">
-    <div id="standardInput">
-      <textarea id="txInput" rows="2" placeholder="Сумма и описание..."></textarea>
-    </div>
-
-    <div id="transitPanel">
-      <div class="transit-circles-row">
-        <div class="transit-circle circle-from-box">
-          <select id="walletFrom">
-            <option value="Руки">Руки</option>
-            <option value="Мила">Мила</option>
-            <option value="Банк">Банк</option>
-          </select>
-        </div>
-        <div style="font-size: 20px; color: #8b949e;">➔</div>
-        <div class="transit-circle circle-to-box">
-          <select id="walletTo">
-            <option value="">Копилка</option>
-            <option value="Мила">Мила</option>
-            <option value="Банк">Банк</option>
-            <option value="Руки">Руки</option>
-          </select>
-        </div>
-      </div>
-      <input type="text" id="transitAmount" class="transit-amount" placeholder="Сумма перевода (€)">
-    </div>
-
-    <div id="joySummaryPanel">
-      <div class="summary-title">Сводка балансов касс</div>
-      <div class="summary-row"><span class="summary-label">Мила:</span> <span class="summary-value" id="sumMila">0.00 €</span></div>
-      <div class="summary-row"><span class="summary-label">Банк:</span> <span class="summary-value" id="sumBank">0.00 €</span></div>
-      <div class="summary-row"><span class="summary-label">Руки:</span> <span class="summary-value" id="sumHands">0.00 €</span></div>
-      <div class="summary-row"><span class="summary-label">Долги:</span> <span class="summary-value" id="sumDebts">0.00 €</span></div>
-      <div class="summary-row"><span class="summary-label">Транзит:</span> <span class="summary-value" id="sumTransit">0.00 €</span></div>
-    </div>
-
-    <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;" onchange="handlePhoto(this)">
-
-    <div class="actions" id="actionButtons">
-      <button class="submit-btn" onclick="requestParseTransaction()">Сохранить</button>
-      <button class="photo-btn" id="photoBtn" onclick="document.getElementById('photoInput').click()">📷 Чек</button>
-    </div>
-  </div>
-</div>
-
-<!-- Модальное окно проверки -->
-<div id="modalOverlay">
-  <div class="modal-content">
-    <h3>Проверка данных</h3>
-    <button id="modalTypeBtn" onclick="toggleModalType()">Расход</button>
-    <div class="modal-field">
-      <label>Сумма (€):</label>
-      <input type="number" id="modalAmount" step="0.01">
-    </div>
-    <div class="modal-field">
-      <label>Вид транзакции:</label>
-      <select id="modalCategory"></select>
-    </div>
-    <div class="modal-field">
-      <label>Описание (или Фирма):</label>
-      <input type="text" id="modalDescription">
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn-cancel" onclick="closeModal()">Отмена</button>
-      <button class="modal-btn-confirm" onclick="confirmTransaction()">Подтвердить</button>
-    </div>
-  </div>
-</div>
-
-<div id="toast" class="toast">Сохранение...</div>
-
-<script>
-  // УКАЖИТЕ ВАШ АКТУАЛЬНЫЙ URL ВЕБ-ПРИЛОЖЕНИЯ GOOGLE APPS SCRIPT
-  const APPS_SCRIPT_URL = "[https://script.google.com/macros/s/AKfycbyouTYwZVPHbgb1jF7JoRmTIqW7novwK4hcwWCqlKDBq-4ExUp4gqx5deF5V0IiPJc7Dg/exec](https://script.google.com/macros/s/AKfycbyouTYwZVPHbgb1jF7JoRmTIqW7novwK4hcwWCqlKDBq-4ExUp4gqx5deF5V0IiPJc7Dg/exec)";
-  
-  let activeCategory = "Руки";
-  let isSubmitting = false;
-  let cachedBalances = {};
-  let globalCategories = [];
-  let pendingTxData = {};
-  let currentModalType = "expense";
-
-  window.onload = function() {
-    loadBalances();
-    const savedMsg = sessionStorage.getItem("joymne_toast");
-    if (savedMsg) {
-      showToast(savedMsg);
-      sessionStorage.removeItem("joymne_toast");
-    }
-  };
-
-  function selectCategory(category) {
-    activeCategory = category;
-    document.querySelectorAll('.circle-btn').forEach(btn => btn.classList.remove('active'));
-    const activeBtn = document.getElementById("btn-" + category);
-    if (activeBtn) activeBtn.classList.add('active');
-
-    const standardInput = document.getElementById("standardInput");
-    const transitPanel = document.getElementById("transitPanel");
-    const joySummaryPanel = document.getElementById("joySummaryPanel");
-    const actionButtons = document.getElementById("actionButtons");
-
-    standardInput.style.display = "none";
-    transitPanel.style.display = "none";
-    joySummaryPanel.style.display = "none";
-    actionButtons.style.display = "flex";
-
-    if (category === "Joy") {
-      joySummaryPanel.style.display = "block";
-      actionButtons.style.display = "none";
-      updateJoySummary();
-    } else if (category === "Транзит") {
-      transitPanel.style.display = "block";
-    } else {
-      standardInput.style.display = "block";
-    }
-  }
-
-  async function loadBalances() {
-    try {
-      const res = await fetch(`${APPS_SCRIPT_URL}?action=getBalances`);
-      const data = await res.json();
-      if (data.status === "success") {
-        cachedBalances = data.balances || {};
-        globalCategories = data.categories || [];
-        
-        const mila = cachedBalances["Мила"] || 0;
-        const bank = cachedBalances["Банк"] || 0;
-        const hands = cachedBalances["Руки"] || 0;
-        const debts = cachedBalances["Долги"] || 0;
-        const transit = cachedBalances["Транзит"] || 0;
-
-        document.getElementById("balMila").innerText = mila.toFixed(2) + " €";
-        document.getElementById("balBank").innerText = bank.toFixed(2) + " €";
-        document.getElementById("balHands").innerText = hands.toFixed(2) + " €";
-        document.getElementById("balDebts").innerText = debts.toFixed(2) + " €";
-        document.getElementById("balTransit").innerText = transit.toFixed(2) + " €";
-        
-        const total = mila + bank + hands + debts + transit;
-        document.getElementById("balJoy").innerText = total.toFixed(2) + " €";
-
-        if (activeCategory === "Joy") updateJoySummary();
-      }
-    } catch (e) {}
-  }
-
-  function updateJoySummary() {
-    document.getElementById("sumMila").innerText = (cachedBalances["Мила"] || 0).toFixed(2) + " €";
-    document.getElementById("sumBank").innerText = (cachedBalances["Банк"] || 0).toFixed(2) + " €";
-    document.getElementById("sumHands").innerText = (cachedBalances["Руки"] || 0).toFixed(2) + " €";
-    document.getElementById("sumDebts").innerText = (cachedBalances["Долги"] || 0).toFixed(2) + " €";
-    document.getElementById("sumTransit").innerText = (cachedBalances["Транзит"] || 0).toFixed(2) + " €";
-  }
-
-  async function requestParseTransaction(photoBase64 = null) {
-    if (isSubmitting) return;
-
-    let finalDescription = "";
-    if (activeCategory === "Транзит") {
-      const fromW = document.getElementById("walletFrom").value;
-      const toW = document.getElementById("walletTo").value;
-      const amountVal = document.getElementById("transitAmount").value.trim();
-      if (!amountVal) { alert("Введите сумму перевода!"); return; }
-      finalDescription = toW ? `Перевод из ${fromW} в ${toW} ${amountVal}` : `Перевод из ${fromW} в Копилка (Сбережения) ${amountVal}`;
-    } else {
-      finalDescription = document.getElementById("txInput").value.trim();
-      if (!finalDescription && !photoBase64) { alert("Введите описание или сумму!"); return; }
-    }
-
-    isSubmitting = true;
-    showToast(photoBase64 ? "Распознавание чека..." : "Анализ данных...");
-    pendingTxData = { category: activeCategory, text: finalDescription, photo: photoBase64 };
-
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ actionType: "parse", category: activeCategory, text: finalDescription, photo: photoBase64 }),
-        redirect: "follow"
-      });
-
-      const raw = await response.text();
-      const data = JSON.parse(raw);
-      isSubmitting = false;
-      
-      if (data.status === "success" && data.parsed) {
-        openModal(data.parsed);
-      } else {
-        alert("Ошибка: " + (data.message || "Не удалось разобрать чек"));
-      }
-    } catch (err) {
-      alert("Ошибка сети");
-      isSubmitting = false;
-    }
-  }
-
-  function openModal(parsedData) {
-    currentModalType = parsedData.type || "expense";
-    document.getElementById("modalAmount").value = parsedData.amount || 0;
-    document.getElementById("modalDescription").value = parsedData.description || "";
-    
-    const selectCat = document.getElementById("modalCategory");
-    selectCat.innerHTML = "";
-    
-    let cats = [...globalCategories];
-    if (parsedData.view && !cats.includes(parsedData.view)) cats.push(parsedData.view);
-    
-    cats.forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c;
-      opt.innerText = c;
-      if (c === parsedData.view) opt.selected = true;
-      selectCat.appendChild(opt);
-    });
-
-    updateModalTypeBtn();
-    document.getElementById("modalOverlay").style.display = "flex";
-  }
-
-  function updateModalTypeBtn() {
-    const btn = document.getElementById("modalTypeBtn");
-    if (pendingTxData.category === "Транзит") {
-      btn.innerText = "Транзит (Перевод)";
-      btn.style.background = "#3b82f6";
-      btn.disabled = true; 
-    } else {
-      btn.disabled = false;
-      if (currentModalType === "income") {
-        btn.innerText = "Приход";
-        btn.style.background = "#238636";
-      } else {
-        btn.innerText = "Расход";
-        btn.style.background = "#eb5757";
-      }
-    }
-  }
-
-  function toggleModalType() {
-    if (pendingTxData.category === "Транзит") return;
-    currentModalType = currentModalType === "expense" ? "income" : "expense";
-    updateModalTypeBtn();
-  }
-
-  function closeModal() {
-    document.getElementById("modalOverlay").style.display = "none";
-    document.getElementById("txInput").value = "";
-    document.getElementById("transitAmount").value = "";
-  }
-
-  async function confirmTransaction() {
-    document.getElementById("modalOverlay").style.display = "none";
-    showToast("Сохранение...");
-    isSubmitting = true;
-
-    const confirmedData = {
-      type: pendingTxData.category === "Транзит" ? "transfer" : currentModalType,
-      amount: parseFloat(document.getElementById("modalAmount").value) || 0,
-      view: document.getElementById("modalCategory").value,
-      description: document.getElementById("modalDescription").value
-    };
-
-    try {
-      const response = await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({ 
-          actionType: "save_confirmed", 
-          category: pendingTxData.category, 
-          text: pendingTxData.text, 
-          photo: pendingTxData.photo,
-          confirmed: confirmedData
-        }),
-        redirect: "follow"
-      });
-
-      const raw = await response.text();
-      const data = JSON.parse(raw);
-
-      if (data.status === "success") {
-        sessionStorage.setItem("joymne_toast", "✓ Сохранено успешно!");
-        window.location.replace(window.location.pathname + "?t=" + Date.now());
-      } else {
-        alert("Ошибка сервера: " + data.message);
-        isSubmitting = false;
-      }
-    } catch (err) {
-      alert("Ошибка соединения с таблицей");
-      isSubmitting = false;
-    }
-  }
-
-  // СЖАТИЕ ФОТО НА СТОРОНЕ БРАУЗЕРА (исключает "Ошибку сети")
-  function handlePhoto(input) {
-    if (input.files && input.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-          const canvas = document.createElement('canvas');
-          let width = img.width, height = img.height;
-          const maxDim = 1200;
-          if (width > height) {
-            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-          } else {
-            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-
-          // Сжатый JPEG всего ~150-200 КБ вместо 6 МБ
-          requestParseTransaction(canvas.toDataURL('image/jpeg', 0.65));
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.innerText = msg;
-    t.style.display = "block";
-    setTimeout(() => { t.style.display = "none"; }, 3500);
-  }
-</script>
-
-</body>
-</html>
+      <div class="circle-btn circle-debt" id="btn-До
